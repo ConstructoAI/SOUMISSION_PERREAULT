@@ -1,0 +1,3747 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Générateur de soumissions budgétaires professionnel pour entrepreneurs en construction au Québec.">
+    <meta name="author" content="Générateur de Soumissions">
+    <title>Générateur de Soumissions Budgétaires - Entrepreneurs Québec</title>
+    <style>
+        /* Variables CSS */
+        :root {
+            --primary-color: #4b5563;
+            --primary-light: #6b7280;
+            --primary-dark: #374151;
+            --primary-bg: #f9fafb;
+            --danger-color: #ef4444;
+            --danger-hover: #dc2626;
+            --success-color: #6b7280;
+            --success-hover: #4b5563;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            --transition-base: all 0.3s ease;
+        }
+
+        /* Reset et Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            font-size: 10px;
+            line-height: 1.3;
+            color: #333;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        /* Conteneur principal */
+        .container {
+            max-width: 8.5in;
+            margin: 20px auto;
+            background: white;
+            box-shadow: var(--shadow-lg);
+            padding: 0.4in;
+            position: relative;
+        }
+
+        /* Barre de contrôle */
+        .control-bar {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            color: white;
+            padding: 20px 15px;
+            margin: -0.4in -0.4in 20px -0.4in;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+        }
+
+        .control-bar h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            opacity: 0.95;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn {
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: var(--transition-base);
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            min-width: 140px;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .control-btn:active {
+            transform: translateY(0) scale(1);
+        }
+
+        .control-btn.danger {
+            background: rgba(239, 68, 68, 0.8);
+            border-color: rgba(239, 68, 68, 0.5);
+        }
+
+        .control-btn.danger:hover {
+            background: rgba(220, 38, 38, 0.9);
+        }
+
+        .control-btn.success {
+            background: rgba(34, 197, 94, 0.9);
+            border-color: rgba(34, 197, 94, 0.5);
+        }
+
+        .control-btn.success:hover {
+            background: rgba(22, 163, 74, 1);
+        }
+
+        .control-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Paramètres */
+        .settings-row {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .settings-row label {
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 500;
+        }
+
+        .settings-row input[type="number"] {
+            width: 60px;
+            padding: 4px 8px;
+            border: 1px solid rgba(255,255,255,0.4);
+            border-radius: 3px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-weight: 600;
+        }
+
+        .settings-row input[type="number"]:focus {
+            outline: none;
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.6);
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 15px;
+        }
+
+        .company-info {
+            text-align: right;
+            font-size: 10px;
+            line-height: 1.2;
+            color: #555;
+        }
+
+        .company-info input {
+            transition: all 0.2s ease;
+            text-align: right;
+            color: #555;
+            font-family: inherit;
+            font-size: 10px;
+        }
+
+        .company-info input:hover:not(:focus) {
+            background: rgba(75, 85, 99, 0.03) !important;
+            cursor: pointer;
+        }
+
+        .company-info input:focus {
+            background: rgba(255, 255, 255, 0.8) !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 2px;
+            padding: 1px 3px;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(75, 85, 99, 0.05);
+        }
+
+        .company-info input.inline {
+            display: inline-block;
+            margin: 0 2px;
+        }
+
+        .company-name {
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 2px;
+            color: var(--primary-dark);
+        }
+
+        .company-name input {
+            color: var(--primary-dark);
+            font-weight: bold;
+            font-size: 12px;
+            width: 100%;
+            margin-bottom: 2px;
+        }
+
+        .company-info > div {
+            margin-bottom: 1px;
+        }
+
+        .company-info > div:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Title */
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin: 15px 0 8px 0;
+            text-align: left;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .subtitle {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 15px;
+            margin-top: 8px;
+        }
+        
+        /* Project Info */
+        .project-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-section {
+            padding: 10px;
+            background: #fafafa;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .info-section h4 {
+            font-weight: bold;
+            font-size: 10px;
+            margin-bottom: 8px;
+            color: var(--primary-dark);
+            padding-bottom: 4px;
+            border-bottom: 1px solid var(--primary-color);
+        }
+
+        .info-section p {
+            font-size: 10px;
+            line-height: 1.4;
+            margin-bottom: 3px;
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            table-layout: fixed;
+            background: white;
+        }
+
+        .table-header th {
+            padding: 8px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 10px;
+            border-right: 1px solid #777;
+            vertical-align: middle;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            color: white;
+        }
+
+        .table-header th:nth-child(1) { width: 46%; text-align: left; }
+        .table-header th:nth-child(2) { width: 10%; text-align: center; }
+        .table-header th:nth-child(3) { width: 18%; text-align: right; }
+        .table-header th:nth-child(4) { width: 18%; text-align: right; }
+        .table-header th:nth-child(5) { width: 6%; text-align: center; border-right: none; }
+
+        .table tbody tr:nth-child(even) { background: #f9fafb; }
+        .table tbody tr:hover { background: #f3f4f6; }
+
+        .table td {
+            padding: 6px 8px;
+            border-right: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            font-size: 10px;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        .table td:nth-child(1) { width: 46%; text-align: left; }
+        .table td:nth-child(2) { width: 10%; text-align: center; }
+        .table td:nth-child(3) { width: 18%; text-align: right; }
+        .table td:nth-child(4) { width: 18%; text-align: right; font-weight: bold; }
+        .table td:nth-child(5) { width: 6%; text-align: center; border-right: none; }
+
+        .item-description { 
+            font-weight: bold; 
+            color: #333; 
+            line-height: 1.3; 
+        }
+        
+        .item-details { 
+            font-size: 9px; 
+            color: #666; 
+            display: block; 
+            margin-top: 3px; 
+            font-style: italic; 
+            line-height: 1.3; 
+            font-weight: normal; 
+        }
+        
+        .category-header-row td { 
+            background: #f9fafb; 
+            font-weight: bold; 
+            padding: 6px 8px !important; 
+            color: var(--primary-dark); 
+            font-size: 11px;
+        }
+        
+        .subtotal-row td { 
+            background: #f3f4f6 !important; 
+            font-weight: bold !important; 
+            padding: 6px 8px !important; 
+        }
+        
+        .total-row td { 
+            background: var(--primary-bg) !important; 
+            font-weight: bold !important; 
+            font-size: 11px !important; 
+            border-top: 2px solid var(--primary-color); 
+        }
+
+        /* Inputs */
+        .amount-input {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 10px;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            transition: var(--transition-base);
+        }
+
+        .amount-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--primary-bg);
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+        }
+
+        .amount-input.error {
+            border-color: var(--danger-color);
+            background: #fef2f2;
+        }
+
+        .quantity-input {
+            width: 100%;
+            padding: 4px 6px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            font-size: 10px;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            transition: var(--transition-base);
+        }
+
+        .quantity-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--primary-bg);
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+        }
+
+        .quantity-input.error {
+            border-color: var(--danger-color);
+            background: #fef2f2;
+        }
+
+        /* Header inputs */
+        .header-input {
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            padding: 3px 8px;
+            font-size: 11px;
+            background: #f9f9f9;
+            transition: var(--transition-base);
+        }
+
+        .header-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+        }
+
+        .date-input {
+            width: 140px;
+        }
+
+        /* Info inputs */
+        .info-input {
+            border: 1px solid #e5e7eb;
+            border-radius: 3px;
+            padding: 4px 8px;
+            font-size: 10px;
+            background: white;
+            transition: var(--transition-base);
+            width: 100%;
+            font-family: inherit;
+            min-width: 40px;
+        }
+
+        .info-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .info-input.inline {
+            display: inline;
+            width: auto;
+        }
+
+        .info-input::placeholder {
+            color: #9ca3af;
+            font-style: italic;
+            font-size: 9px;
+        }
+
+        strong .info-input {
+            font-weight: 600;
+        }
+
+        /* Styles spéciaux pour les champs de contact */
+        .info-section input {
+            transition: all 0.2s ease;
+        }
+
+        .info-section input:hover:not(:focus) {
+            background: rgba(75, 85, 99, 0.03) !important;
+            cursor: pointer;
+        }
+
+        .info-section input:focus {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 2px;
+            padding: 2px 4px;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(75, 85, 99, 0.05);
+        }
+
+        .amount-display {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: #111;
+        }
+
+        /* Checkbox pour masquer */
+        .hide-checkbox {
+            cursor: pointer;
+            transform: scale(1.2);
+            accent-color: var(--primary-color);
+        }
+
+
+        /* Section cachée */
+        .section-row.hidden {
+            display: none;
+        }
+
+        /* Section entière cachée */
+        .section.hidden-section {
+            display: none !important;
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 15px;
+            transition: opacity 0.3s;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .section.hidden-section {
+            display: none;
+        }
+
+        /* Récapitulatif */
+        .summary-box {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f9fafb 0%, #e5e7eb 100%);
+            border-radius: 6px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .summary-box h4 {
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .summary-table {
+            width: 100%;
+            font-size: 11px;
+        }
+
+        .summary-table td {
+            padding: 6px 10px;
+        }
+
+        .summary-table .label {
+            text-align: right;
+            padding-right: 20px;
+            color: #555;
+        }
+
+        .summary-table .value {
+            text-align: right;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            width: 150px;
+            color: #111;
+        }
+
+        .summary-table .total-row {
+            border-top: 2px solid var(--primary-color);
+            font-size: 14px;
+            background: white;
+        }
+
+        /* Notes and exclusions */
+        .exclusions, .conditions {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #fafafa 0%, #f9fafb 100%);
+            border: 1px solid #e5e7eb;
+            border-left: 4px solid var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .exclusions h4, .conditions h4 { 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            color: var(--primary-dark); 
+            font-size: 11px; 
+        }
+        
+        .exclusions ul, .conditions ul { 
+            margin-left: 15px; 
+        }
+        
+        .exclusions li, .conditions li { 
+            margin-bottom: 4px; 
+            font-size: 9px; 
+            line-height: 1.4; 
+            color: #555;
+        }
+
+        /* Section Signature */
+        .signature-section {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid #0284c7;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .signature-section h4 {
+            font-size: 14px;
+            color: #0c4a6e;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .decision-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .decision-btn {
+            padding: 15px 40px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 200px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-accept {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-accept:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-refuse {
+            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
+            color: white;
+        }
+
+        .btn-refuse:hover {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .signature-form {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .signature-form.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0284c7;
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .confirmation-message {
+            display: none;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .confirmation-message.accepted {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .confirmation-message.refused {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .confirm-action-btn {
+            margin-top: 15px;
+            padding: 10px 30px;
+            background: #0284c7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .confirm-action-btn:hover {
+            background: #0369a1;
+            transform: translateY(-1px);
+        }
+
+        .signature-timestamp {
+            margin-top: 10px;
+            font-size: 9px;
+            color: #6b7280;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .signature-section.signed .decision-buttons {
+            display: none;
+        }
+
+        .signature-section.signed .signature-form {
+            display: none !important;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 9px;
+            color: #666;
+            border-top: 2px solid var(--primary-color);
+            padding-top: 15px;
+        }
+
+        .footer input {
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+        }
+
+        .footer input:hover:not(:focus) {
+            background: rgba(102, 102, 102, 0.03) !important;
+            cursor: pointer;
+        }
+
+        .footer input:focus {
+            background: rgba(255, 255, 255, 0.8) !important;
+            border: 1px solid #e5e7eb !important;
+            border-radius: 2px;
+            padding: 1px 3px;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(102, 102, 102, 0.05);
+        }
+        
+        .page-number { 
+            text-align: right; 
+            margin-top: 20px; 
+            padding-top: 10px; 
+            font-size: 9px; 
+            color: #999; 
+            border-top: 1px solid #ddd;
+        }
+
+        /* Indicateur de sauvegarde */
+        .save-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: var(--success-color);
+            color: white;
+            border-radius: 6px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 1001;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .save-indicator.show {
+            display: block;
+            animation: fadeInOut 2s ease;
+        }
+
+        .save-indicator.error {
+            background: var(--danger-color);
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(20px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(20px); }
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Modal pour liste des sauvegardes */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            max-width: 600px;
+            width: 90%;
+            max-height: 70vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary-dark);
+            font-size: 18px;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 24px;
+            color: #999;
+            background: none;
+            border: none;
+            padding: 0;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+
+        .saved-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .saved-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .saved-item:hover {
+            background: #f3f4f6;
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .saved-item-info {
+            flex: 1;
+        }
+
+        .saved-item-number {
+            font-weight: bold;
+            color: var(--primary-dark);
+            font-size: 12px;
+        }
+
+        .saved-item-details {
+            font-size: 10px;
+            color: #666;
+            margin-top: 3px;
+        }
+
+        .saved-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .saved-item-btn {
+            padding: 5px 10px;
+            font-size: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .saved-item-btn.load {
+            color: var(--primary-dark);
+            border-color: var(--primary-color);
+        }
+
+        .saved-item-btn.load:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .saved-item-btn.delete {
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .saved-item-btn.delete:hover {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .no-saves {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 11px;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Mode impression */
+        @media print {
+            body {
+                background: white;
+                font-size: 9px;
+            }
+            
+            .control-bar {
+                display: none !important;
+            }
+            
+            .loading-overlay {
+                display: none !important;
+            }
+            
+            .save-indicator {
+                display: none !important;
+            }
+            
+            .container {
+                box-shadow: none;
+                margin: 0;
+                padding: 0.3in;
+                max-width: 100%;
+            }
+            
+            .hide-checkbox {
+                display: none !important;
+            }
+            
+            .amount-input, .quantity-input, .header-input, .info-input {
+                border: none !important;
+                background: transparent !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+            
+            .table-header th:nth-child(5),
+            .table td:nth-child(5) {
+                display: none !important;
+            }
+            
+            .signature-section:not(.signed) {
+                display: none !important;
+            }
+            
+            .decision-buttons {
+                display: none !important;
+            }
+            
+            .signature-form {
+                display: none !important;
+            }
+            
+            .table-header th:nth-child(1) { width: 52% !important; }
+            .table td:nth-child(1) { width: 52% !important; }
+            
+            .table-header th {
+                background: var(--primary-dark) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .category-header-row td,
+            .subtotal-row td,
+            .total-row td,
+            .summary-box {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            .section {
+                page-break-inside: avoid;
+            }
+            
+            .summary-box {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 0.2in;
+            }
+            
+            .project-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .control-btn {
+                width: 100%;
+                justify-content: center;
+                min-width: auto;
+            }
+            
+            .settings-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .settings-row label {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Barre de contrôle -->
+    <div class="control-bar" id="controlBar">
+        <h3>🛠️ Contrôles de la soumission</h3>
+        <div class="control-buttons">
+            <button class="control-btn success" onclick="APP.calculateAll()" title="Recalculer tous les montants">
+                💰 Recalculer tout
+            </button>
+            <button class="control-btn" onclick="APP.toggleAllSections()" title="Afficher ou masquer toutes les sections">
+                👁️ Afficher/Masquer tout
+            </button>
+            <button class="control-btn" onclick="APP.toggleEmptySections()" title="Masquer automatiquement les sections sans prix">🔍 Masquer sections vides</button>
+            <button class="control-btn" onclick="APP.saveData()" title="Sauvegarder dans le navigateur">
+                💾 Sauvegarder
+            </button>
+            <button class="control-btn success" onclick="APP.saveAs()" title="Enregistrer sous un nouveau numéro">
+                💾 Enregistrer sous
+            </button>
+            <button class="control-btn" onclick="APP.showSavedList()" title="Voir et charger les soumissions sauvegardées">
+                📂 Charger
+            </button>
+            <button class="control-btn danger" onclick="APP.resetAll()" title="Réinitialiser tous les champs">
+                🔄 Réinitialiser
+            </button>
+            <button class="control-btn" onclick="APP.resetDecision()" title="Permet de resigner la soumission">
+                🔓 Réinitialiser signature
+            </button>
+            <button class="control-btn" onclick="window.print()" title="Imprimer le document">
+                🖨️ Imprimer
+            </button>
+            <button class="control-btn" onclick="APP.exportData()" title="Exporter en fichier JSON">
+                📥 Exporter JSON
+            </button>
+            <button class="control-btn" onclick="APP.importData()" title="Importer un fichier JSON">
+                📤 Importer JSON
+            </button>
+            <button class="control-btn success" onclick="APP.exportHTML()" title="Télécharger une copie HTML complète avec les données">
+                📄 Télécharger HTML
+            </button>
+        </div>
+        <div class="settings-row">
+            <label>
+                💼 Profit (%):
+                <input type="number" id="profitRate" value="15" min="0" max="50" step="0.5" onchange="APP.updateProfitRate()" title="Taux de profit (0-50%)">
+            </label>
+            <label>
+                📊 Administration (%):
+                <input type="number" id="adminRate" value="3" min="0" max="10" step="0.5" onchange="APP.updateAdminRate()" title="Frais administratifs (0-10%)">
+            </label>
+            <label>
+                ⚠️ Contingences (%):
+                <input type="number" id="contingencyRate" value="12" min="0" max="25" step="0.5" onchange="APP.updateContingencyRate()" title="Contingences pour imprévus (0-25%)">
+            </label>
+        </div>
+    </div>
+
+    <!-- Indicateur de sauvegarde -->
+    <div class="save-indicator" id="saveIndicator">
+        <span id="saveMessage">✔ Sauvegarde automatique</span>
+    </div>
+
+    <!-- Modal pour liste des sauvegardes -->
+    <div id="savedListModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📂 Soumissions sauvegardées</h3>
+                <button class="modal-close" onclick="APP.closeSavedList()">×</button>
+            </div>
+            <div id="savedListContent">
+                <!-- Le contenu sera généré dynamiquement -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="company-info">
+                <div class="company-name">
+                    <input type="text" id="nomEntreprise" value="Groupe Perreault" style="border: none; background: transparent;" placeholder="Nom de l'entreprise" maxlength="100" onchange="APP.autoSave()">
+                </div>
+                <div>
+                    <input type="text" id="adresseEntreprise" value="103, rue Normandie" style="border: none; background: transparent; width: 100%;" placeholder="Adresse" maxlength="200" onchange="APP.autoSave()">
+                </div>
+                <div>
+                    <input type="text" id="villeEntreprise" value="Repentigny (Québec) J6A 6B9" style="border: none; background: transparent; width: 100%;" placeholder="Ville, Province, Code postal" maxlength="100" onchange="APP.autoSave()">
+                </div>
+                <div>
+                    <span style="color: #555;">T:</span> 
+                    <input type="text" class="inline" id="telEntreprise" value="514.589.5932" style="border: none; background: transparent; width: 65px;" placeholder="Téléphone" maxlength="20" onchange="APP.autoSave()">
+                    <span style="color: #555; margin: 0 5px;">|</span>
+                    <span style="color: #555;">C:</span> 
+                    <input type="text" class="inline" id="cellEntreprise" value="514.927.5932" style="border: none; background: transparent; width: 65px;" placeholder="Cellulaire" maxlength="20" onchange="APP.autoSave()">
+                </div>
+                <div>
+                    <input type="email" id="emailEntreprise" value="info@groupeperreault.ca" style="border: none; background: transparent; width: 100%;" placeholder="Courriel" maxlength="100" onchange="APP.autoSave()">
+                </div>
+                <div>
+                    <span style="color: #555;">RBQ :</span> 
+                    <input type="text" class="inline" id="rbqEntreprise" value="5763-7159-01" style="border: none; background: transparent; width: 75px;" placeholder="RBQ" maxlength="20" onchange="APP.autoSave()">
+                    <span style="color: #555; margin: 0 5px;">|</span>
+                    <span style="color: #555;">NEQ :</span> 
+                    <input type="text" class="inline" id="neqEntreprise" value="" style="border: none; background: transparent; width: 65px;" placeholder="NEQ" maxlength="20" onchange="APP.autoSave()">
+                </div>
+                <div>
+                    <span style="color: #555;">TPS:</span> 
+                    <input type="text" class="inline" id="tpsEntreprise" value="" style="border: none; background: transparent; width: 95px;" placeholder="TPS" maxlength="30" onchange="APP.autoSave()">
+                    <span style="color: #555; margin: 0 5px;">|</span>
+                    <span style="color: #555;">TVQ:</span> 
+                    <input type="text" class="inline" id="tvqEntreprise" value="" style="border: none; background: transparent; width: 105px;" placeholder="TVQ" maxlength="30" onchange="APP.autoSave()">
+                </div>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <div class="title">SOUMISSION BUDGÉTAIRE</div>
+        <div class="subtitle">
+            Soumission #<input type="text" id="numeroSoumission" class="header-input" value="2025-001" style="width: 100px;" maxlength="20" onchange="APP.autoSave()">, 
+            <input type="date" id="dateSoumission" class="header-input date-input" onchange="APP.autoSave()">
+        </div>
+
+        <!-- Project Info -->
+        <div class="project-info">
+            <div class="info-section">
+                <h4>Soumission pour:</h4>
+                <p><strong><input type="text" class="info-input" id="nomClient" placeholder="Nom du client" maxlength="100" onchange="APP.autoSave()"></strong></p>
+                <p><input type="text" class="info-input" id="adresseClient" placeholder="Adresse" maxlength="200" onchange="APP.autoSave()"></p>
+                <p>
+                    <input type="text" class="info-input inline" id="villeClient" placeholder="Ville" style="width: 60%;" maxlength="50" onchange="APP.autoSave()"> (Québec) 
+                    <input type="text" class="info-input inline" id="codePostalClient" placeholder="Code postal" style="width: 30%;" maxlength="7" onchange="APP.autoSave()">
+                </p>
+            </div>
+            <div class="info-section">
+                <h4>Projet</h4>
+                <p><strong><input type="text" class="info-input" id="nomProjet" placeholder="Nom du projet" maxlength="100" onchange="APP.autoSave()"></strong></p>
+                <p><input type="text" class="info-input" id="typeConstruction" placeholder="Type de construction" maxlength="100" onchange="APP.autoSave()"></p>
+                <p>
+                    Superficie: <input type="text" class="info-input inline" id="superficie" placeholder="X" style="width: 60px;" maxlength="10" onchange="APP.autoSave()"> pi² | 
+                    Étages: <input type="text" class="info-input inline" id="etages" placeholder="X" style="width: 30px;" maxlength="2" onchange="APP.autoSave()">
+                </p>
+                <p>Fondation: <input type="text" class="info-input inline" id="typeFondation" placeholder="Type" style="width: 120px;" maxlength="50" onchange="APP.autoSave()"></p>
+            </div>
+            <div class="info-section">
+                <h4>Contact Principal</h4>
+                <p><strong><input type="text" class="info-input" id="nomContact" placeholder="[Nom], [Titre]" maxlength="100" onchange="APP.autoSave()"></strong></p>
+                <p>
+                    T: <input type="text" class="info-input inline" id="telContact" value="514.589.5932" style="width: 75px; border: none; background: transparent;" placeholder="Téléphone" maxlength="20" onchange="APP.autoSave()"> | 
+                    C: <input type="text" class="info-input inline" id="cellContact" value="514.927.5932" style="width: 75px; border: none; background: transparent;" placeholder="Cellulaire" maxlength="20" onchange="APP.autoSave()">
+                </p>
+                <p>
+                    <input type="email" class="info-input" id="emailContact" value="info@groupeperreault.ca" style="width: 100%; border: none; background: transparent;" placeholder="Courriel" maxlength="100" onchange="APP.autoSave()">
+                </p>
+                <p>Chargé de projet: <input type="text" class="info-input inline" id="chargeProjet" placeholder="[Nom]" style="width: 100px;" maxlength="50" onchange="APP.autoSave()"></p>
+            </div>
+        </div>
+
+        <!-- Section 0 - Travaux préparatoires -->
+        <div class="section" data-section="0">
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantité</th>
+                        <th>Coût unitaire</th>
+                        <th>Coût total</th>
+                        <th title="Afficher/Masquer les items">☑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-header-row">
+                        <td colspan="5">0.0 - Travaux Préparatoires et Démolition</td>
+                    </tr>
+                    <tr class="section-row" data-item="0-1">
+                        <td class="item-description">Permis et études
+                            <span class="item-details">Permis de construction, étude géotechnique, certificat de localisation, test de percolation (si requis).</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="0-1" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="0-1" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="0-1">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="0-2">
+                        <td class="item-description">Démolition et décontamination
+                            <span class="item-details">Démolition de structures existantes, décontamination (amiante, vermiculite si applicable), disposition des débris.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="0-2" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="0-2" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="0-2">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="0-3">
+                        <td class="item-description">Préparation du terrain et services temporaires
+                            <span class="item-details">Déboisement, essouchement, nivellement, protection des arbres, électricité temporaire, toilette de chantier, clôture.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="0-3" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="0-3" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="0-3">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="subtotal-row">
+                        <td colspan="3">Sous-total</td>
+                        <td class="amount-display" data-subtotal="0">0,00&nbsp;$</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 1 - Fondation -->
+        <div class="section" data-section="1">
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantité</th>
+                        <th>Coût unitaire</th>
+                        <th>Coût total</th>
+                        <th title="Afficher/Masquer les items">☑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-header-row">
+                        <td colspan="5">1.0 - Fondation, Infrastructure et Services</td>
+                    </tr>
+                    <tr class="section-row" data-item="1-1">
+                        <td class="item-description">Excavation et remblai
+                            <span class="item-details">Excavation générale, remblai granulaire compacté, pierre concassée, membrane géotextile.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="1-1" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="1-1" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="1-1">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="1-2">
+                        <td class="item-description">Fondation complète
+                            <span class="item-details">Béton 30 MPA, armature 15M, coffrage, coulée, finition, cure, isolant R-10 sous-dalle, pare-vapeur.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="1-2" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="1-2" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="1-2">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="1-3">
+                        <td class="item-description">Drainage et imperméabilisation
+                            <span class="item-details">Drain français, membrane d'imperméabilisation, panneau de drainage, pompe de puisard.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="1-3" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="1-3" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="1-3">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="1-4">
+                        <td class="item-description">Raccordements et services
+                            <span class="item-details">Égout, aqueduc, pluvial (jusqu'à 50'), système septique si applicable (fosse et champ selon Q-2, r.22).</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="1-4" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="1-4" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="1-4">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="subtotal-row">
+                        <td colspan="3">Sous-total</td>
+                        <td class="amount-display" data-subtotal="1">0,00&nbsp;$</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 2 - Structure -->
+        <div class="section" data-section="2">
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantité</th>
+                        <th>Coût unitaire</th>
+                        <th>Coût total</th>
+                        <th title="Afficher/Masquer les items">☑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-header-row">
+                        <td colspan="5">2.0 - Structure et Charpente</td>
+                    </tr>
+                    <tr class="section-row" data-item="2-1">
+                        <td class="item-description">Structure de plancher
+                            <span class="item-details">Poutrelles ajourées 14", solives de rive, contreventement, sous-plancher 3/4" collé-vissé.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="2-1" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="2-1" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="2-1">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="2-2">
+                        <td class="item-description">Murs porteurs et cloisons
+                            <span class="item-details">Montants 2x6 @ 16" c/c murs extérieurs, 2x4 @ 16" c/c cloisons, lisses, sablières doubles, linteaux.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="2-2" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="2-2" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="2-2">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="2-3">
+                        <td class="item-description">Structure de toit
+                            <span class="item-details">Fermes préfabriquées ou chevrons/solives selon plans, contreventement, support de toit 5/8".</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="2-3" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="2-3" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="2-3">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="2-4">
+                        <td class="item-description">Éléments structuraux spéciaux
+                            <span class="item-details">Poutres et colonnes d'acier, poutres LVL, colonnes décoratives, quincaillerie structurale.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="2-4" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="2-4" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="2-4">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="subtotal-row">
+                        <td colspan="3">Sous-total</td>
+                        <td class="amount-display" data-subtotal="2">0,00&nbsp;$</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 3 - Enveloppe -->
+        <div class="section" data-section="3">
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantité</th>
+                        <th>Coût unitaire</th>
+                        <th>Coût total</th>
+                        <th title="Afficher/Masquer les items">☑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-header-row">
+                        <td colspan="5">3.0 - Enveloppe Extérieure</td>
+                    </tr>
+                    <tr class="section-row" data-item="3-1">
+                        <td class="item-description">Toiture - Matériaux
+                            <span class="item-details">Bardeaux architecturaux 30 ans, membrane autocollante, papier #15, ventilation de toit, évents de plomberie.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="3-1" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="3-1" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="3-1">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="3-2">
+                        <td class="item-description">Toiture - Main-d'œuvre et ferblanterie
+                            <span class="item-details">Installation bardeaux, solins, noues, faîtières, gouttières 5", descentes pluviales, protège-gouttières.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="3-2" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="3-2" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="3-2">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="3-3">
+                        <td class="item-description">Revêtements muraux - Matériaux
+                            <span class="item-details">Maçonnerie ([%]), fibrociment ([%]), vinyle/acier ([%]), fourrures, pare-air Tyvek, solins.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="3-3" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="3-3" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="3-3">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="3-4">
+                        <td class="item-description">Revêtements muraux - Main-d'œuvre
+                            <span class="item-details">Installation complète des revêtements, calfeutrage, scellants, finition des coins et jonctions.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="3-4" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="3-4" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="3-4">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="3-5">
+                        <td class="item-description">Portes et fenêtres
+                            <span class="item-details">[X] fenêtres PVC/hybride, double vitrage Low-E argon, [X] portes extérieures, porte patio, portes de garage isolées.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="3-5" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="3-5" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="3-5">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="3-6">
+                        <td class="item-description">Soffites, fascias et accessoires
+                            <span class="item-details">Soffites ventilés aluminium, fascias aluminium, moulures de finition, ventilation d'entretoit.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="3-6" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="3-6" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="3-6">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="3-7">
+                        <td class="item-description">Structures extérieures
+                            <span class="item-details">Balcons, terrasses, garde-corps aluminium/verre, escaliers extérieurs, auvents, pergola (si applicable).</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="3-7" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="3-7" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="3-7">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="3-8">
+                        <td class="item-description">Maçonnerie décorative et cheminée
+                            <span class="item-details">Cheminée préfabriquée, revêtement de pierre/brique, couronnement, chapeau de cheminée.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="3-8" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="3-8" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="3-8">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="subtotal-row">
+                        <td colspan="3">Sous-total</td>
+                        <td class="amount-display" data-subtotal="3">0,00&nbsp;$</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 4 - Systèmes mécaniques -->
+        <div class="section" data-section="4">
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantité</th>
+                        <th>Coût unitaire</th>
+                        <th>Coût total</th>
+                        <th title="Afficher/Masquer les items">☑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-header-row">
+                        <td colspan="5">4.0 - Systèmes Mécaniques et Électriques</td>
+                    </tr>
+                    <tr class="section-row" data-item="4-1">
+                        <td class="item-description">Plomberie - Distribution et drainage
+                            <span class="item-details">Tuyauterie PEX/cuivre, drainage ABS, valves d'arrêt, clapets antiretour, supports et isolant de tuyaux.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="4-1" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="4-1" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="4-1">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="4-2">
+                        <td class="item-description">Plomberie - Appareils et accessoires
+                            <span class="item-details">[X] salles de bain complètes, évier cuisine double, chauffe-eau [X]gal, adoucisseur d'eau, robinetterie extérieure.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="4-2" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="4-2" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="4-2">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="4-3">
+                        <td class="item-description">Chauffage au sol (si applicable)
+                            <span class="item-details">Plancher radiant [X] zones, chaudière haute efficacité, pompes de circulation, contrôles.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="4-3" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="4-3" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="4-3">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="4-4">
+                        <td class="item-description">Électricité - Distribution principale
+                            <span class="item-details">Panneau 200A/40 circuits, mise à terre, câblage principal, sous-panneau garage, protection surtension.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="4-4" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="4-4" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="4-4">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="4-5">
+                        <td class="item-description">Électricité - Filage et dispositifs
+                            <span class="item-details">Câblage complet Romex, [X] prises, [X] interrupteurs, circuits dédiés, prises DDFT, détecteurs.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="4-5" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="4-5" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="4-5">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="4-6">
+                        <td class="item-description">Éclairage et contrôles
+                            <span class="item-details">[X] luminaires encastrés, éclairage sous-armoires, gradateurs, éclairage extérieur, commandes intelligentes.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="4-6" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="4-6" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="4-6">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="4-7">
+                        <td class="item-description">CVAC - Équipements principaux
+                            <span class="item-details">Thermopompe centrale [X] tonnes, fournaise d'appoint gaz/électrique, humidificateur, filtre HEPA.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="4-7" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="4-7" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="4-7">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="4-8">
+                        <td class="item-description">CVAC - Distribution et ventilation
+                            <span class="item-details">Conduits isolés, grilles et diffuseurs, VRC/VRE [X] PCM, ventilateurs salles de bain, hotte cuisine.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="4-8" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="4-8" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="4-8">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="4-9">
+                        <td class="item-description">Systèmes spécialisés
+                            <span class="item-details">Pré-filage alarme/caméras, aspirateur central, audio intégré, réseau informatique Cat6, borne VÉ 240V.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="4-9" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="4-9" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="4-9">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="subtotal-row">
+                        <td colspan="3">Sous-total</td>
+                        <td class="amount-display" data-subtotal="4">0,00&nbsp;$</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 5 - Isolation -->
+        <div class="section" data-section="5">
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantité</th>
+                        <th>Coût unitaire</th>
+                        <th>Coût total</th>
+                        <th title="Afficher/Masquer les items">☑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-header-row">
+                        <td colspan="5">5.0 - Isolation et Étanchéité</td>
+                    </tr>
+                    <tr class="section-row" data-item="5-1">
+                        <td class="item-description">Isolation thermique
+                            <span class="item-details">Murs ext. R-24.5, plafond cathédrale R-31, grenier R-50, sous-sol R-20, solives de rive R-20.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="5-1" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="5-1" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="5-1">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="5-2">
+                        <td class="item-description">Étanchéité à l'air
+                            <span class="item-details">Pare-vapeur 6 mil, scellant acoustique, ruban Tuck Tape, mousse expansive, coupe-froid.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="5-2" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="5-2" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="5-2">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="5-3">
+                        <td class="item-description">Insonorisation
+                            <span class="item-details">Laine acoustique entre étages, barres résilientes, scellant acoustique, isolant plomberie.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="5-3" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="5-3" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="5-3">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="5-4">
+                        <td class="item-description">Tests et certification
+                            <span class="item-details">Test d'infiltrométrie, thermographie, certification Novoclimat Select, rapport de conformité.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="5-4" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="5-4" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="5-4">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="subtotal-row">
+                        <td colspan="3">Sous-total</td>
+                        <td class="amount-display" data-subtotal="5">0,00&nbsp;$</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 6 - Finitions intérieures -->
+        <div class="section" data-section="6">
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantité</th>
+                        <th>Coût unitaire</th>
+                        <th>Coût total</th>
+                        <th title="Afficher/Masquer les items">☑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-header-row">
+                        <td colspan="5">6.0 - Finitions Intérieures</td>
+                    </tr>
+                    <tr class="section-row" data-item="6-1">
+                        <td class="item-description">Cloisons sèches - Gypse
+                            <span class="item-details">Gypse 1/2" régulier et hydrofuge, gypse 5/8" plafonds, coins métalliques, finition niveau 4.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-1" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-1" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-1">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="6-2">
+                        <td class="item-description">Peinture et finition murale
+                            <span class="item-details">Apprêt, peinture 2 couches (murs/plafonds), peinture émail (boiseries), papier-peint (si applicable).</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-2" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-2" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-2">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="6-3">
+                        <td class="item-description">Revêtements de plancher
+                            <span class="item-details">Bois franc/ingénierie [X]pi², céramique [X]pi², tapis [X]pi², vinyle luxe [X]pi², sous-planchers.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-3" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-3" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-3">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="6-4">
+                        <td class="item-description">Carrelage et dosseret
+                            <span class="item-details">Céramique salles de bain (plancher/murs douche), dosseret cuisine, membrane Schluter, joints époxy.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-4" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-4" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-4">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="6-5">
+                        <td class="item-description">Ébénisterie - Cuisine
+                            <span class="item-details">Armoires thermoplastique/bois, comptoir quartz/granit [X]pi lin, îlot, pantry, quincaillerie soft-close.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-5" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-5" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-5">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="6-6">
+                        <td class="item-description">Ébénisterie - Salles de bain et autres
+                            <span class="item-details">Vanités [X] salles de bain, lingerie, walk-in aménagé, rangement entrée, bureau intégré.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-6" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-6" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-6">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="6-7">
+                        <td class="item-description">Menuiserie intérieure
+                            <span class="item-details">[X] portes intérieures, cadres et moulures, plinthes, cimaises, tablettes décoratives.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-7" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-7" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-7">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="6-8">
+                        <td class="item-description">Escaliers et rampes
+                            <span class="item-details">[X] escaliers bois franc/MDF, main courante, barreaux métal/bois, poteaux décoratifs.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-8" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-8" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-8">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="6-9">
+                        <td class="item-description">Finition sous-sol (si applicable)
+                            <span class="item-details">Divisions, isolation, gypse, plancher flottant/époxy, plafond suspendu, salle mécanique finie.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-9" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-9" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-9">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="6-10">
+                        <td class="item-description">Accessoires et quincaillerie
+                            <span class="item-details">Poignées de porte, crochets, barres à serviettes, miroirs, tablettes garde-robes, cache-radiateurs.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="6-10" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="6-10" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="6-10">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="subtotal-row">
+                        <td colspan="3">Sous-total</td>
+                        <td class="amount-display" data-subtotal="6">0,00&nbsp;$</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Section 7 - Aménagement extérieur -->
+        <div class="section" data-section="7">
+            <table class="table">
+                <thead class="table-header">
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantité</th>
+                        <th>Coût unitaire</th>
+                        <th>Coût total</th>
+                        <th title="Afficher/Masquer les items">☑</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="category-header-row">
+                        <td colspan="5">7.0 - Aménagement Extérieur et Garage</td>
+                    </tr>
+                    <tr class="section-row" data-item="7-1">
+                        <td class="item-description">Terrassement et nivellement
+                            <span class="item-details">Nivellement final, terre végétale, ensemencement gazon, arbres et arbustes de base.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="7-1" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="7-1" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="7-1">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="7-2">
+                        <td class="item-description">Surfaces dures
+                            <span class="item-details">Entrée asphalte/pavé uni, trottoirs béton/pavé, bordures, patio béton/composite.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="7-2" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="7-2" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="7-2">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="7-3">
+                        <td class="item-description">Clôtures et structures
+                            <span class="item-details">Clôture [type], portail, muret décoratif, pergola, cabanon préfabriqué.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="7-3" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="7-3" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="7-3">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="7-4">
+                        <td class="item-description">Éclairage extérieur et irrigation
+                            <span class="item-details">Éclairage paysager, lampadaires, système d'irrigation (si applicable), minuteries.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="7-4" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="7-4" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="7-4">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="section-row" data-item="7-5">
+                        <td class="item-description">Finition garage
+                            <span class="item-details">Dalle béton finie, murs gypse peint, éclairage, prises électriques, rangement, porte de service.</span>
+                        </td>
+                        <td><input type="number" class="quantity-input" data-row="7-5" value="1" min="0" max="9999" step="1" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td><input type="number" class="amount-input" data-row="7-5" value="0" min="0" max="99999999" step="0.01" onchange="APP.calculateRowWithQuantity(this)"></td>
+                        <td class="amount-display" data-total="7-5">0,00&nbsp;$</td>
+                        <td><input type="checkbox" class="hide-checkbox" checked="" onchange="APP.toggleRow(this)"></td>
+                    </tr>
+                    <tr class="subtotal-row">
+                        <td colspan="3">Sous-total</td>
+                        <td class="amount-display" data-subtotal="7">0,00&nbsp;$</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Récapitulatif des coûts -->
+        <div class="summary-box">
+            <h4>📊 RÉCAPITULATIF DES COÛTS</h4>
+            <table class="summary-table">
+                <tbody><tr>
+                    <td class="label">0.0 - Travaux Préparatoires et Démolition:</td>
+                    <td class="value" id="recap-0">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">1.0 - Fondation, Infrastructure et Services:</td>
+                    <td class="value" id="recap-1">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">2.0 - Structure et Charpente:</td>
+                    <td class="value" id="recap-2">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">3.0 - Enveloppe Extérieure:</td>
+                    <td class="value" id="recap-3">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">4.0 - Systèmes Mécaniques et Électriques:</td>
+                    <td class="value" id="recap-4">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">5.0 - Isolation et Étanchéité:</td>
+                    <td class="value" id="recap-5">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">6.0 - Finitions Intérieures:</td>
+                    <td class="value" id="recap-6">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">7.0 - Aménagement Extérieur et Garage:</td>
+                    <td class="value" id="recap-7">0,00&nbsp;$</td>
+                </tr>
+                <tr style="border-top: 1px solid #ddd; font-weight: bold;">
+                    <td class="label">TOTAL DES TRAVAUX DE BASE:</td>
+                    <td class="value" id="totalBase">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">Administration (<span id="adminPercent">3</span>%):</td>
+                    <td class="value" id="totalAdmin">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">Contingences (<span id="contingencyPercent">12</span>%):</td>
+                    <td class="value" id="totalContingency">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">Profit de l'entrepreneur (<span id="profitPercent">15</span>%):</td>
+                    <td class="value" id="totalProfit">0,00&nbsp;$</td>
+                </tr>
+                <tr style="border-top: 1px solid var(--primary-color); font-weight: bold;">
+                    <td class="label">Total avant taxes:</td>
+                    <td class="value" id="totalAvantTaxes">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">TPS (5%) - <span id="tpsDisplay">850370164RT0001</span>:</td>
+                    <td class="value" id="totalTPS">0,00&nbsp;$</td>
+                </tr>
+                <tr>
+                    <td class="label">TVQ (9.975%) - <span id="tvqDisplay">1212199610TQ0002</span>:</td>
+                    <td class="value" id="totalTVQ">0,00&nbsp;$</td>
+                </tr>
+                <tr class="total-row">
+                    <td class="label"><strong>INVESTISSEMENT TOTAL:</strong></td>
+                    <td class="value"><strong id="totalFinal">0,00&nbsp;$</strong></td>
+                </tr>
+            </tbody></table>
+        </div>
+
+        <!-- Conditions et Exclusions -->
+        <div class="conditions">
+            <h4>Conditions et Modalités</h4>
+            <ul>
+                <li><strong>Validité:</strong> Cette soumission est valide pour 30 jours à partir de la date d'émission.</li>
+                <li><strong>Délai d'exécution:</strong> [X] semaines après l'obtention des permis et signature du contrat.</li>
+                <li><strong>Modalités de paiement:</strong> 10% à la signature, 25% début des travaux, paiements progressifs selon avancement, 5% retenue finale.</li>
+                <li><strong>Garanties:</strong> 1 an main-d'œuvre, 5 ans toiture, 10 ans structure, selon normes GCR.</li>
+                <li><strong>Augmentation des matériaux:</strong> Prix sujets à ajustement si augmentation &gt;5% entre soumission et commande.</li>
+                <li><strong>Conditions de sol:</strong> Prix basés sur sol normal. Roc ou conditions spéciales en supplément.</li>
+                <li><strong>Modifications:</strong> Tout changement après signature fera l'objet d'un ordre de changement écrit avec ajustement de prix.</li>
+            </ul>
+        </div>
+
+        <div class="exclusions">
+            <h4>Exclusions principales</h4>
+            <ul>
+                <li>Tous les électroménagers.</li>
+                <li>Luminaires décoratifs (la pose est incluse, pas la fourniture).</li>
+                <li>Ameublement, décoration, système d'alarme et caméras.</li>
+                <li>Piscine, spa, et foyer (la préparation structurale est incluse, pas l'appareil).</li>
+                <li>Aménagement paysager élaboré (au-delà de la portée de base incluse).</li>
+                <li>Taxes de mutation et frais de notaire.</li>
+                <li>Frais potentiels de raccordement aux services publics au-delà de 50 pieds de la résidence.</li>
+                <li>Toute modification aux plans après la signature du contrat fera l'objet d'un ordre de changement écrit.</li>
+            </ul>
+        </div>
+
+        <!-- Section Signature Client -->
+        <div class="signature-section" id="signatureSection">
+            <h4>📝 DÉCISION DU CLIENT</h4>
+            
+            <div class="decision-buttons" id="decisionButtons">
+                <button class="decision-btn btn-accept" onclick="APP.showSignatureForm('accept')">
+                    ✅ ACCEPTER LA SOUMISSION
+                </button>
+                <button class="decision-btn btn-refuse" onclick="APP.showSignatureForm('refuse')">
+                    ❌ REFUSER LA SOUMISSION
+                </button>
+            </div>
+
+            <div class="signature-form" id="signatureForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clientName">Nom complet *</label>
+                        <input type="text" id="clientName" placeholder="Prénom et nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientTitle">Titre/Fonction</label>
+                        <input type="text" id="clientTitle" placeholder="Ex: Propriétaire, Gestionnaire">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clientEmail">Courriel *</label>
+                        <input type="email" id="clientEmail" placeholder="exemple@domaine.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="clientPhone">Téléphone</label>
+                        <input type="tel" id="clientPhone" placeholder="(514) 123-4567">
+                    </div>
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                    <label for="clientComments">Commentaires / Conditions</label>
+                    <textarea id="clientComments" placeholder="Ajoutez vos commentaires, conditions ou demandes de modifications..."></textarea>
+                </div>
+                <div style="text-align: center;">
+                    <button class="confirm-action-btn" id="confirmBtn" onclick="APP.confirmDecision()">
+                        CONFIRMER MA DÉCISION
+                    </button>
+                </div>
+            </div>
+
+            <div class="confirmation-message" id="confirmationMessage">
+                <div id="confirmationText"></div>
+                <div class="signature-timestamp" id="signatureTimestamp"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Soumission préparée par :</strong></p>
+            <p style="margin-top: 10px;">
+                <strong><input type="text" class="info-input inline" id="preparePar" placeholder="[Nom], [Titre]" style="width: 200px; text-align: center;" maxlength="100" onchange="APP.autoSave()"></strong><br>
+                <input type="text" id="nomEntrepriseFooter" value="Groupe Perreault" style="border: none; background: transparent; text-align: center; width: 200px; font-weight: inherit;" placeholder="Nom de l'entreprise" maxlength="100" onchange="APP.autoSave()">
+            </p>
+            <p style="margin-top: 10px;">
+                Pour information: 
+                <input type="text" class="inline" id="telInfoFooter" value="514.927.5932" style="border: none; background: transparent; width: 100px;" placeholder="Téléphone" maxlength="20" onchange="APP.autoSave()">
+            </p>
+            <p style="margin-top: 12px; font-weight: bold;">
+                <input type="text" id="messageConfiance" value="Merci de votre confiance!" style="border: none; background: transparent; text-align: center; width: 300px; font-weight: bold;" placeholder="Message de remerciement" maxlength="100" onchange="APP.autoSave()">
+            </p>
+            <p style="margin-top: 15px; font-size: 8px; color: #888; line-height: 1.3;">
+                Cette soumission est confidentielle et demeure la propriété de <input type="text" class="inline" id="nomEntrepriseCopyright1" value="Groupe Perreault" style="border: none; background: transparent; font-size: 8px; color: #888; width: 120px;" placeholder="Nom entreprise" maxlength="100" onchange="APP.autoSave()">.
+            </p>
+            <p style="margin-top: 3px; font-size: 8px; color: #888;">
+                © <input type="text" class="inline" id="anneeCopyright" value="2025" style="border: none; background: transparent; font-size: 8px; color: #888; width: 35px;" placeholder="Année" maxlength="4" onchange="APP.autoSave()"> <input type="text" class="inline" id="nomEntrepriseCopyright2" value="Groupe Perreault" style="border: none; background: transparent; font-size: 8px; color: #888; width: 120px;" placeholder="Nom entreprise" maxlength="100" onchange="APP.autoSave()"> - Tous droits réservés.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        'use strict';
+
+        // Configuration et constantes
+        const CONFIG = {
+            LIMITS: {
+                MIN_AMOUNT: 0,
+                MAX_AMOUNT: 99999999,
+                MIN_RATE: 0,
+                MAX_PROFIT_RATE: 50,
+                MAX_ADMIN_RATE: 10,
+                MAX_CONTINGENCY_RATE: 25,
+                AUTO_SAVE_DELAY: 30000,
+                SAVE_THROTTLE: 1000,
+                MAX_FILE_SIZE: 5000000 // 5MB
+            },
+            TAXES: {
+                TPS: 0.05,
+                TVQ: 0.09975
+            },
+            DEFAULT_RATES: {
+                ADMIN: 0.03,
+                CONTINGENCY: 0.12,
+                PROFIT: 0.15
+            }
+        };
+
+        // Application principale
+        const APP = {
+            // État de l'application
+            state: {
+                rates: {
+                    admin: CONFIG.DEFAULT_RATES.ADMIN,
+                    contingency: CONFIG.DEFAULT_RATES.CONTINGENCY,
+                    profit: CONFIG.DEFAULT_RATES.PROFIT
+                },
+                lastSaveTime: 0,
+                isDirty: false,
+                autoSaveTimer: null,
+                isLoading: false,
+                hideEmptySections: false
+            },
+
+            // Utilitaires
+            utils: {
+                // Échapper les caractères HTML
+                escapeHtml(text) {
+                    const div = document.createElement('div');
+                    div.textContent = text || '';
+                    return div.innerHTML;
+                },
+
+                // Valider un nombre
+                validateNumber(value, min = CONFIG.LIMITS.MIN_AMOUNT, max = CONFIG.LIMITS.MAX_AMOUNT) {
+                    const num = parseFloat(value) || 0;
+                    return Math.max(min, Math.min(max, num));
+                },
+
+                // Formater la devise
+                formatCurrency(amount) {
+                    return new Intl.NumberFormat('fr-CA', {
+                        style: 'currency',
+                        currency: 'CAD',
+                        minimumFractionDigits: 2
+                    }).format(amount).replace('CA', '');
+                },
+
+                // Parser la devise
+                parseCurrency(text) {
+                    if (!text) return 0;
+                    const cleaned = text.toString().replace(/[^\d,-]/g, '').replace(',', '.');
+                    return Math.round(parseFloat(cleaned) * 100) / 100 || 0;
+                },
+
+                // Vérifier localStorage
+                isLocalStorageAvailable() {
+                    try {
+                        const test = '__storage_test__';
+                        localStorage.setItem(test, test);
+                        localStorage.removeItem(test);
+                        return true;
+                    } catch(e) {
+                        return false;
+                    }
+                },
+
+                // Afficher le loading
+                showLoading(show = true) {
+                    const overlay = document.getElementById('loadingOverlay');
+                    if (overlay) {
+                        overlay.classList.toggle('show', show);
+                    }
+                    APP.state.isLoading = show;
+                },
+
+                // Afficher notification
+                showNotification(message, isError = false) {
+                    const indicator = document.getElementById('saveIndicator');
+                    const messageEl = document.getElementById('saveMessage');
+                    
+                    if (indicator && messageEl) {
+                        messageEl.textContent = message;
+                        indicator.classList.toggle('error', isError);
+                        indicator.classList.add('show');
+                        
+                        setTimeout(() => {
+                            indicator.classList.remove('show');
+                            indicator.classList.remove('error');
+                        }, 2000);
+                    }
+                },
+
+                // Debounce function
+                debounce(func, wait) {
+                    let timeout;
+                    return function executedFunction(...args) {
+                        const later = () => {
+                            clearTimeout(timeout);
+                            func(...args);
+                        };
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                    };
+                }
+            },
+
+            // Initialisation
+            init() {
+                try {
+                    // Vérifier localStorage
+                    if (!APP.utils.isLocalStorageAvailable()) {
+                        console.warn('LocalStorage non disponible');
+                        APP.utils.showNotification('⚠️ Stockage local non disponible', true);
+                    }
+
+                    // Charger les données
+                    APP.loadData();
+                    
+                    // Calculer tout
+                    APP.calculateAll();
+                    
+                    // Mettre à jour l'affichage des numéros de taxes
+                    APP.updateTaxNumbers();
+                    
+                    // Configurer l'auto-save
+                    APP.state.autoSaveTimer = setInterval(() => {
+                        if (APP.state.isDirty) {
+                            APP.autoSave();
+                            APP.state.isDirty = false;
+                        }
+                    }, CONFIG.LIMITS.AUTO_SAVE_DELAY);
+
+                    // Event listener pour quitter la page
+                    window.addEventListener('beforeunload', (e) => {
+                        if (APP.state.isDirty) {
+                            APP.autoSave();
+                            e.preventDefault();
+                            e.returnValue = 'Des modifications non sauvegardées seront perdues.';
+                        }
+                    });
+
+                    // Event listeners pour les champs d'entreprise
+                    document.getElementById('tpsEntreprise')?.addEventListener('change', APP.updateTaxNumbers);
+                    document.getElementById('tvqEntreprise')?.addEventListener('change', APP.updateTaxNumbers);
+                    document.getElementById('tpsEntreprise')?.addEventListener('input', APP.updateTaxNumbers);
+                    document.getElementById('tvqEntreprise')?.addEventListener('input', APP.updateTaxNumbers);
+                    
+                    // Synchroniser le nom de l'entreprise
+                    document.getElementById('nomEntreprise')?.addEventListener('change', APP.syncCompanyName);
+                    document.getElementById('nomEntrepriseFooter')?.addEventListener('change', APP.syncCompanyName);
+                    document.getElementById('nomEntrepriseCopyright1')?.addEventListener('change', APP.syncCompanyName);
+                    document.getElementById('nomEntrepriseCopyright2')?.addEventListener('change', APP.syncCompanyName);
+
+                    console.log('Application initialisée avec succès');
+                } catch (error) {
+                    console.error('Erreur lors de l\'initialisation:', error);
+                    APP.utils.showNotification('⚠️ Erreur d\'initialisation', true);
+                }
+            },
+
+            // Mettre à jour l'affichage des numéros de taxes
+            updateTaxNumbers() {
+                try {
+                    const tpsNumber = document.getElementById('tpsEntreprise')?.value || '';
+                    const tvqNumber = document.getElementById('tvqEntreprise')?.value || '';
+                    
+                    const tpsDisplay = document.getElementById('tpsDisplay');
+                    const tvqDisplay = document.getElementById('tvqDisplay');
+                    
+                    if (tpsDisplay) {
+                        tpsDisplay.textContent = tpsNumber;
+                        console.log('TPS mis à jour:', tpsNumber);
+                    }
+                    if (tvqDisplay) {
+                        tvqDisplay.textContent = tvqNumber;
+                        console.log('TVQ mis à jour:', tvqNumber);
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour des numéros de taxes:', error);
+                }
+            },
+
+            // Synchroniser le nom de l'entreprise dans tous les champs
+            syncCompanyName(event) {
+                const newName = event.target.value;
+                const sourceId = event.target.id;
+                
+                // Liste des champs qui contiennent le nom de l'entreprise
+                const companyNameFields = [
+                    'nomEntreprise',
+                    'nomEntrepriseFooter', 
+                    'nomEntrepriseCopyright1', 
+                    'nomEntrepriseCopyright2'
+                ];
+                
+                // Mettre à jour tous les autres champs sauf celui qui a été modifié
+                companyNameFields.forEach(fieldId => {
+                    if (fieldId !== sourceId) {
+                        const field = document.getElementById(fieldId);
+                        if (field) {
+                            field.value = newName;
+                        }
+                    }
+                });
+                
+                // Déclencher la sauvegarde automatique
+                APP.state.isDirty = true;
+            },
+
+            // Calculer une ligne
+            calculateRow(input) {
+                try {
+                    // Valider l'entrée
+                    let value = APP.utils.validateNumber(input.value);
+                    
+                    // Mettre à jour l'input si nécessaire
+                    if (parseFloat(input.value) !== value) {
+                        input.value = value;
+                        input.classList.add('error');
+                        setTimeout(() => input.classList.remove('error'), 500);
+                    }
+                    
+                    // Mettre à jour l'affichage
+                    const rowId = input.dataset.row;
+                    const totalCell = document.querySelector(`[data-total="${rowId}"]`);
+                    
+                    if (totalCell) {
+                        totalCell.textContent = APP.utils.formatCurrency(value);
+                    }
+                    
+                    // Recalculer le sous-total de la section
+                    const sectionId = rowId.split('-')[0];
+                    APP.calculateSectionSubtotal(sectionId);
+                    
+                    // Recalculer les totaux
+                    APP.calculateAll();
+                    
+                    // Marquer comme modifié
+                    APP.state.isDirty = true;
+                } catch (error) {
+                    console.error('Erreur lors du calcul de la ligne:', error);
+                }
+            },
+
+            // Calculer une ligne avec quantité
+            calculateRowWithQuantity(input) {
+                try {
+                    const rowId = input.dataset.row;
+                    
+                    // Obtenir les éléments de la ligne
+                    const quantityInput = document.querySelector(`input.quantity-input[data-row="${rowId}"]`);
+                    const amountInput = document.querySelector(`input.amount-input[data-row="${rowId}"]`);
+                    const totalCell = document.querySelector(`[data-total="${rowId}"]`);
+                    
+                    if (!quantityInput || !amountInput || !totalCell) {
+                        return;
+                    }
+                    
+                    // Valider et obtenir les valeurs
+                    let quantity = 1;
+                    let unitCost = 0;
+                    
+                    if (input.classList.contains('quantity-input')) {
+                        quantity = APP.utils.validateNumber(input.value, 0, 9999);
+                        unitCost = APP.utils.validateNumber(amountInput.value);
+                        
+                        // Mettre à jour si nécessaire
+                        if (parseFloat(input.value) !== quantity) {
+                            input.value = quantity;
+                            input.classList.add('error');
+                            setTimeout(() => input.classList.remove('error'), 500);
+                        }
+                    } else if (input.classList.contains('amount-input')) {
+                        quantity = APP.utils.validateNumber(quantityInput.value, 0, 9999);
+                        unitCost = APP.utils.validateNumber(input.value);
+                        
+                        // Mettre à jour si nécessaire
+                        if (parseFloat(input.value) !== unitCost) {
+                            input.value = unitCost;
+                            input.classList.add('error');
+                            setTimeout(() => input.classList.remove('error'), 500);
+                        }
+                    }
+                    
+                    // Calculer le total
+                    const total = quantity * unitCost;
+                    
+                    // Mettre à jour l'affichage
+                    totalCell.textContent = APP.utils.formatCurrency(total);
+                    
+                    // Recalculer le sous-total de la section
+                    const sectionId = rowId.split('-')[0];
+                    APP.calculateSectionSubtotal(sectionId);
+                    
+                    // Recalculer les totaux
+                    APP.calculateAll();
+                    
+                    // Mettre à jour la visibilité des sections vides
+                    if (APP.state.hideEmptySections) {
+                        APP.updateEmptySectionsVisibility();
+                    }
+                    
+                    // Marquer comme modifié
+                    APP.state.isDirty = true;
+                } catch (error) {
+                    console.error('Erreur lors du calcul de la ligne avec quantité:', error);
+                }
+            },
+
+            // Calculer le sous-total d'une section
+            calculateSectionSubtotal(sectionId) {
+                try {
+                    let subtotal = 0;
+                    const section = document.querySelector(`[data-section="${sectionId}"]`);
+                    
+                    if (!section) return 0;
+                    
+                    const rows = section.querySelectorAll('.section-row:not(.hidden)');
+                    
+                    rows.forEach(row => {
+                        const totalCell = row.querySelector('.amount-display');
+                        if (totalCell && totalCell.dataset.total) {
+                            const value = APP.utils.parseCurrency(totalCell.textContent);
+                            subtotal += value;
+                        }
+                    });
+                    
+                    // Mettre à jour le sous-total
+                    const subtotalCell = section.querySelector(`[data-subtotal="${sectionId}"]`);
+                    if (subtotalCell) {
+                        subtotalCell.textContent = APP.utils.formatCurrency(subtotal);
+                    }
+                    
+                    // Mettre à jour le récapitulatif
+                    const recapCell = document.getElementById(`recap-${sectionId}`);
+                    if (recapCell) {
+                        recapCell.textContent = APP.utils.formatCurrency(subtotal);
+                    }
+                    
+                    return subtotal;
+                } catch (error) {
+                    console.error('Erreur lors du calcul du sous-total:', error);
+                    return 0;
+                }
+            },
+
+            // Basculer l'affichage d'une ligne
+            toggleRow(checkbox) {
+                try {
+                    const row = checkbox.closest('.section-row');
+                    if (!row) return;
+                    
+                    row.classList.toggle('hidden', !checkbox.checked);
+                    
+                    const sectionId = row.dataset.item.split('-')[0];
+                    APP.calculateSectionSubtotal(sectionId);
+                    APP.calculateAll();
+                    
+                    APP.state.isDirty = true;
+                } catch (error) {
+                    console.error('Erreur lors du toggle de la ligne:', error);
+                }
+            },
+
+            // Calculer tous les totaux
+            calculateAll() {
+                try {
+                    let totalBase = 0;
+                    
+                    // Calculer le total de toutes les sections
+                    for (let i = 0; i <= 7; i++) {
+                        const subtotal = APP.calculateSectionSubtotal(i.toString());
+                        totalBase += subtotal;
+                    }
+                    
+                    // Éviter la division par zéro
+                    totalBase = Math.max(0, totalBase);
+                    
+                    // Calculer les frais
+                    const admin = totalBase * APP.state.rates.admin;
+                    const contingency = totalBase * APP.state.rates.contingency;
+                    const profit = totalBase * APP.state.rates.profit;
+                    
+                    const totalAvantTaxes = totalBase + admin + contingency + profit;
+                    const tps = totalAvantTaxes * CONFIG.TAXES.TPS;
+                    const tvq = totalAvantTaxes * CONFIG.TAXES.TVQ;
+                    const totalFinal = totalAvantTaxes + tps + tvq;
+                    
+                    // Mettre à jour l'affichage
+                    APP.updateDisplay('totalBase', totalBase);
+                    APP.updateDisplay('totalAdmin', admin);
+                    APP.updateDisplay('totalContingency', contingency);
+                    APP.updateDisplay('totalProfit', profit);
+                    APP.updateDisplay('totalAvantTaxes', totalAvantTaxes);
+                    APP.updateDisplay('totalTPS', tps);
+                    APP.updateDisplay('totalTVQ', tvq);
+                    APP.updateDisplay('totalFinal', totalFinal);
+                } catch (error) {
+                    console.error('Erreur lors du calcul total:', error);
+                }
+            },
+
+            // Mettre à jour l'affichage
+            updateDisplay(id, value) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = APP.utils.formatCurrency(value);
+                }
+            },
+
+            // Basculer toutes les sections
+            toggleAllSections() {
+                try {
+                    const checkboxes = document.querySelectorAll('.hide-checkbox');
+                    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+                    
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = !allChecked;
+                        APP.toggleRow(checkbox);
+                    });
+                } catch (error) {
+                    console.error('Erreur lors du toggle des sections:', error);
+                }
+            },
+
+            // Basculer le masquage des sections vides
+            toggleEmptySections() {
+                try {
+                    APP.state.hideEmptySections = !APP.state.hideEmptySections;
+                    APP.updateEmptySectionsVisibility();
+                    
+                    const button = document.querySelector('button[onclick="APP.toggleEmptySections()"]');
+                    if (button) {
+                        if (APP.state.hideEmptySections) {
+                            button.textContent = '👁️ Afficher sections vides';
+                            button.title = 'Afficher toutes les sections';
+                            button.classList.add('success');
+                        } else {
+                            button.textContent = '🔍 Masquer sections vides';
+                            button.title = 'Masquer automatiquement les sections sans prix';
+                            button.classList.remove('success');
+                        }
+                    }
+                    
+                    APP.state.isDirty = true;
+                } catch (error) {
+                    console.error('Erreur lors du toggle des sections vides:', error);
+                }
+            },
+
+            // Mettre à jour la visibilité des sections vides
+            updateEmptySectionsVisibility() {
+                try {
+                    const sections = document.querySelectorAll('[data-section]');
+                    
+                    sections.forEach(section => {
+                        const sectionId = section.dataset.section;
+                        const isEmpty = APP.isSectionEmpty(sectionId);
+                        
+                        if (APP.state.hideEmptySections && isEmpty) {
+                            section.classList.add('hidden-section');
+                        } else {
+                            section.classList.remove('hidden-section');
+                        }
+                    });
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour de la visibilité:', error);
+                }
+            },
+
+            // Vérifier si une section est vide (tous les montants = 0)
+            isSectionEmpty(sectionId) {
+                try {
+                    const section = document.querySelector(`[data-section="${sectionId}"]`);
+                    if (!section) return true;
+                    
+                    const amountInputs = section.querySelectorAll('.amount-input');
+                    
+                    // Une section est vide si tous ses montants sont à 0
+                    return Array.from(amountInputs).every(input => {
+                        const value = parseFloat(input.value) || 0;
+                        return value === 0;
+                    });
+                } catch (error) {
+                    console.error('Erreur lors de la vérification de section vide:', error);
+                    return false;
+                }
+            },
+
+            // Mettre à jour le taux de profit
+            updateProfitRate() {
+                try {
+                    let rate = parseFloat(document.getElementById('profitRate').value);
+                    rate = APP.utils.validateNumber(rate, CONFIG.LIMITS.MIN_RATE, CONFIG.LIMITS.MAX_PROFIT_RATE);
+                    
+                    document.getElementById('profitRate').value = rate;
+                    APP.state.rates.profit = rate / 100;
+                    document.getElementById('profitPercent').textContent = rate.toFixed(1);
+                    
+                    APP.calculateAll();
+                    APP.state.isDirty = true;
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour du taux de profit:', error);
+                }
+            },
+
+            // Mettre à jour le taux d'administration
+            updateAdminRate() {
+                try {
+                    let rate = parseFloat(document.getElementById('adminRate').value);
+                    rate = APP.utils.validateNumber(rate, CONFIG.LIMITS.MIN_RATE, CONFIG.LIMITS.MAX_ADMIN_RATE);
+                    
+                    document.getElementById('adminRate').value = rate;
+                    APP.state.rates.admin = rate / 100;
+                    document.getElementById('adminPercent').textContent = rate.toFixed(1);
+                    
+                    APP.calculateAll();
+                    APP.state.isDirty = true;
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour du taux admin:', error);
+                }
+            },
+
+            // Mettre à jour le taux de contingences
+            updateContingencyRate() {
+                try {
+                    let rate = parseFloat(document.getElementById('contingencyRate').value);
+                    rate = APP.utils.validateNumber(rate, CONFIG.LIMITS.MIN_RATE, CONFIG.LIMITS.MAX_CONTINGENCY_RATE);
+                    
+                    document.getElementById('contingencyRate').value = rate;
+                    APP.state.rates.contingency = rate / 100;
+                    document.getElementById('contingencyPercent').textContent = rate.toFixed(1);
+                    
+                    APP.calculateAll();
+                    APP.state.isDirty = true;
+                } catch (error) {
+                    console.error('Erreur lors de la mise à jour du taux de contingences:', error);
+                }
+            },
+
+            // Collecter les données
+            collectData() {
+                const data = {
+                    version: '2.0',
+                    inputs: {},
+                    checkboxes: {},
+                    rates: { ...APP.state.rates },
+                    headerInfo: {},
+                    projectInfo: {},
+                    hideEmptySections: APP.state.hideEmptySections,
+                    timestamp: new Date().toISOString()
+                };
+                
+                try {
+                    // Collecter les informations d'en-tête
+                    const headerFields = ['numeroSoumission', 'dateSoumission'];
+                    headerFields.forEach(field => {
+                        const el = document.getElementById(field);
+                        if (el) data.headerInfo[field] = el.value;
+                    });
+                    
+                    // Collecter les informations du projet
+                    const projectFields = [
+                        'nomClient', 'adresseClient', 'villeClient', 'codePostalClient',
+                        'nomProjet', 'typeConstruction', 'superficie', 'etages',
+                        'typeFondation', 'nomContact', 'telContact', 'cellContact', 
+                        'emailContact', 'chargeProjet', 'preparePar'
+                    ];
+                    
+                    // Collecter les informations de l'entreprise
+                    const companyFields = [
+                        'nomEntreprise', 'adresseEntreprise', 'villeEntreprise',
+                        'telEntreprise', 'cellEntreprise', 'emailEntreprise',
+                        'rbqEntreprise', 'neqEntreprise', 'tpsEntreprise', 'tvqEntreprise',
+                        'nomEntrepriseFooter', 'telInfoFooter', 'messageConfiance',
+                        'nomEntrepriseCopyright1', 'anneeCopyright', 'nomEntrepriseCopyright2'
+                    ];
+                    
+                    projectFields.forEach(field => {
+                        const el = document.getElementById(field);
+                        if (el) data.projectInfo[field] = el.value;
+                    });
+                    
+                    // Collecter les informations de l'entreprise
+                    data.companyInfo = {};
+                    companyFields.forEach(field => {
+                        const el = document.getElementById(field);
+                        if (el) data.companyInfo[field] = el.value;
+                    });
+                    
+                    // Collecter les valeurs des inputs de montant
+                    document.querySelectorAll('.amount-input').forEach(input => {
+                        data.inputs[input.dataset.row] = input.value;
+                    });
+                    
+                    // Collecter les valeurs des inputs de quantité
+                    data.quantities = {};
+                    document.querySelectorAll('.quantity-input').forEach(input => {
+                        data.quantities[input.dataset.row] = input.value;
+                    });
+                    
+                    // Collecter l'état des checkboxes
+                    document.querySelectorAll('.hide-checkbox').forEach((checkbox, index) => {
+                        data.checkboxes[index] = checkbox.checked;
+                    });
+                } catch (error) {
+                    console.error('Erreur lors de la collecte des données:', error);
+                }
+                
+                return data;
+            },
+
+            // Sauvegarder automatiquement
+            autoSave() {
+                try {
+                    const now = Date.now();
+                    
+                    // Throttling
+                    if (now - APP.state.lastSaveTime < CONFIG.LIMITS.SAVE_THROTTLE) {
+                        return;
+                    }
+                    
+                    APP.state.lastSaveTime = now;
+                    
+                    if (!APP.utils.isLocalStorageAvailable()) {
+                        console.warn('LocalStorage non disponible pour la sauvegarde');
+                        return;
+                    }
+                    
+                    const data = APP.collectData();
+                    localStorage.setItem('soumission_data', JSON.stringify(data));
+                    APP.utils.showNotification('✔ Sauvegarde automatique');
+                } catch (error) {
+                    if (error.name === 'QuotaExceededError') {
+                        APP.utils.showNotification('⚠️ Espace de stockage insuffisant', true);
+                        console.error('LocalStorage plein');
+                    } else {
+                        console.error('Erreur lors de la sauvegarde automatique:', error);
+                    }
+                }
+            },
+
+            // Sauvegarder manuellement (écrase la sauvegarde actuelle)
+            saveData() {
+                try {
+                    if (!APP.utils.isLocalStorageAvailable()) {
+                        APP.utils.showNotification('⚠️ Stockage local non disponible', true);
+                        APP.exportData();
+                        return;
+                    }
+                    
+                    const currentNumber = document.getElementById('numeroSoumission').value;
+                    const data = APP.collectData();
+                    
+                    // Sauvegarder dans la liste des soumissions
+                    const savedList = APP.getSavedList();
+                    const index = savedList.findIndex(item => item.numeroSoumission === currentNumber);
+                    
+                    if (index !== -1) {
+                        // Mise à jour de la soumission existante
+                        savedList[index] = {
+                            numeroSoumission: currentNumber,
+                            nomClient: data.projectInfo.nomClient || 'Sans nom',
+                            nomProjet: data.projectInfo.nomProjet || 'Sans projet',
+                            date: new Date().toISOString(),
+                            data: data
+                        };
+                    } else {
+                        // Nouvelle soumission
+                        savedList.push({
+                            numeroSoumission: currentNumber,
+                            nomClient: data.projectInfo.nomClient || 'Sans nom',
+                            nomProjet: data.projectInfo.nomProjet || 'Sans projet',
+                            date: new Date().toISOString(),
+                            data: data
+                        });
+                    }
+                    
+                    localStorage.setItem('soumissions_list', JSON.stringify(savedList));
+                    localStorage.setItem('soumission_current', currentNumber);
+                    localStorage.setItem('soumission_data', JSON.stringify(data));
+                    
+                    APP.utils.showNotification('✔ Soumission ' + currentNumber + ' sauvegardée');
+                } catch (error) {
+                    console.error('Erreur lors de la sauvegarde:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors de la sauvegarde', true);
+                }
+            },
+
+            // Enregistrer sous un nouveau numéro
+            saveAs() {
+                try {
+                    if (!APP.utils.isLocalStorageAvailable()) {
+                        APP.utils.showNotification('⚠️ Stockage local non disponible', true);
+                        return;
+                    }
+                    
+                    // Obtenir le prochain numéro disponible
+                    const nextNumber = APP.getNextNumber();
+                    
+                    // Mettre à jour le numéro dans le formulaire
+                    document.getElementById('numeroSoumission').value = nextNumber;
+                    
+                    // Sauvegarder avec le nouveau numéro
+                    const data = APP.collectData();
+                    const savedList = APP.getSavedList();
+                    
+                    savedList.push({
+                        numeroSoumission: nextNumber,
+                        nomClient: data.projectInfo.nomClient || 'Sans nom',
+                        nomProjet: data.projectInfo.nomProjet || 'Sans projet',
+                        date: new Date().toISOString(),
+                        data: data
+                    });
+                    
+                    localStorage.setItem('soumissions_list', JSON.stringify(savedList));
+                    localStorage.setItem('soumission_current', nextNumber);
+                    localStorage.setItem('soumission_data', JSON.stringify(data));
+                    
+                    APP.utils.showNotification('✔ Enregistré sous le numéro ' + nextNumber);
+                    
+                    // Proposer de télécharger le fichier HTML
+                    setTimeout(() => {
+                        if (confirm(`Voulez-vous également télécharger une copie HTML de la soumission ${nextNumber} ?`)) {
+                            APP.exportHTML();
+                        }
+                    }, 500);
+                } catch (error) {
+                    console.error('Erreur lors de l\'enregistrement sous:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors de l\'enregistrement', true);
+                }
+            },
+
+            // Obtenir la liste des soumissions sauvegardées
+            getSavedList() {
+                try {
+                    const saved = localStorage.getItem('soumissions_list');
+                    return saved ? JSON.parse(saved) : [];
+                } catch (error) {
+                    console.error('Erreur lors de la récupération de la liste:', error);
+                    return [];
+                }
+            },
+
+            // Obtenir le prochain numéro de soumission
+            getNextNumber() {
+                try {
+                    const savedList = APP.getSavedList();
+                    const currentYear = new Date().getFullYear();
+                    
+                    // Filtrer les soumissions de l'année courante
+                    const yearNumbers = savedList
+                        .map(item => item.numeroSoumission)
+                        .filter(num => num && num.startsWith(currentYear + '-'))
+                        .map(num => {
+                            const parts = num.split('-');
+                            return parts.length > 1 ? parseInt(parts[1]) : 0;
+                        })
+                        .filter(num => !isNaN(num));
+                    
+                    // Trouver le plus grand numéro
+                    const maxNumber = yearNumbers.length > 0 ? Math.max(...yearNumbers) : 0;
+                    
+                    // Formater le nouveau numéro
+                    const nextNumber = maxNumber + 1;
+                    return `${currentYear}-${String(nextNumber).padStart(3, '0')}`;
+                } catch (error) {
+                    console.error('Erreur lors de la génération du numéro:', error);
+                    return `${new Date().getFullYear()}-001`;
+                }
+            },
+
+            // Afficher la liste des soumissions sauvegardées
+            showSavedList() {
+                try {
+                    const modal = document.getElementById('savedListModal');
+                    const content = document.getElementById('savedListContent');
+                    const savedList = APP.getSavedList();
+                    
+                    if (savedList.length === 0) {
+                        content.innerHTML = '<div class="no-saves">Aucune soumission sauvegardée</div>';
+                    } else {
+                        // Trier par date décroissante
+                        savedList.sort((a, b) => new Date(b.date) - new Date(a.date));
+                        
+                        let html = '<ul class="saved-list">';
+                        savedList.forEach((item, index) => {
+                            const date = new Date(item.date);
+                            const dateStr = date.toLocaleDateString('fr-CA') + ' ' + date.toLocaleTimeString('fr-CA', {hour: '2-digit', minute: '2-digit'});
+                            
+                            html += `
+                                <li class="saved-item">
+                                    <div class="saved-item-info">
+                                        <div class="saved-item-number">Soumission #${APP.utils.escapeHtml(item.numeroSoumission)}</div>
+                                        <div class="saved-item-details">
+                                            Client: ${APP.utils.escapeHtml(item.nomClient)}<br>
+                                            Projet: ${APP.utils.escapeHtml(item.nomProjet)}<br>
+                                            Sauvegardé: ${dateStr}
+                                        </div>
+                                    </div>
+                                    <div class="saved-item-actions">
+                                        <button class="saved-item-btn load" onclick="APP.loadSavedItem('${APP.utils.escapeHtml(item.numeroSoumission)}')">
+                                            Charger
+                                        </button>
+                                        <button class="saved-item-btn delete" onclick="APP.deleteSavedItem('${APP.utils.escapeHtml(item.numeroSoumission)}')">
+                                            Supprimer
+                                        </button>
+                                    </div>
+                                </li>
+                            `;
+                        });
+                        html += '</ul>';
+                        content.innerHTML = html;
+                    }
+                    
+                    modal.classList.add('show');
+                } catch (error) {
+                    console.error('Erreur lors de l\'affichage de la liste:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors de l\'affichage', true);
+                }
+            },
+
+            // Fermer la liste des sauvegardes
+            closeSavedList() {
+                const modal = document.getElementById('savedListModal');
+                modal.classList.remove('show');
+            },
+
+            // Charger une soumission sauvegardée
+            loadSavedItem(numeroSoumission) {
+                try {
+                    const savedList = APP.getSavedList();
+                    const item = savedList.find(s => s.numeroSoumission === numeroSoumission);
+                    
+                    if (!item) {
+                        APP.utils.showNotification('⚠️ Soumission introuvable', true);
+                        return;
+                    }
+                    
+                    APP.utils.showLoading(true);
+                    
+                    // Restaurer les données
+                    APP.restoreData(item.data);
+                    
+                    // Mettre à jour la soumission courante
+                    localStorage.setItem('soumission_current', numeroSoumission);
+                    localStorage.setItem('soumission_data', JSON.stringify(item.data));
+                    
+                    // Fermer le modal
+                    APP.closeSavedList();
+                    
+                    APP.utils.showLoading(false);
+                    APP.utils.showNotification('✔ Soumission ' + numeroSoumission + ' chargée');
+                } catch (error) {
+                    console.error('Erreur lors du chargement:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors du chargement', true);
+                    APP.utils.showLoading(false);
+                }
+            },
+
+            // Supprimer une soumission sauvegardée
+            deleteSavedItem(numeroSoumission) {
+                if (!confirm(`Êtes-vous sûr de vouloir supprimer la soumission ${numeroSoumission} ?`)) {
+                    return;
+                }
+                
+                try {
+                    let savedList = APP.getSavedList();
+                    savedList = savedList.filter(item => item.numeroSoumission !== numeroSoumission);
+                    
+                    localStorage.setItem('soumissions_list', JSON.stringify(savedList));
+                    
+                    // Si c'est la soumission courante, la retirer
+                    const current = localStorage.getItem('soumission_current');
+                    if (current === numeroSoumission) {
+                        localStorage.removeItem('soumission_current');
+                    }
+                    
+                    // Rafraîchir l'affichage
+                    APP.showSavedList();
+                    
+                    APP.utils.showNotification('✔ Soumission supprimée');
+                } catch (error) {
+                    console.error('Erreur lors de la suppression:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors de la suppression', true);
+                }
+            },
+
+            // Charger les données (au démarrage)
+            loadData() {
+                try {
+                    if (!APP.utils.isLocalStorageAvailable()) {
+                        APP.setDefaultValues();
+                        return;
+                    }
+                    
+                    // Vérifier s'il y a une soumission courante
+                    const currentNumber = localStorage.getItem('soumission_current');
+                    
+                    if (currentNumber) {
+                        // Charger depuis la liste des soumissions
+                        const savedList = APP.getSavedList();
+                        const item = savedList.find(s => s.numeroSoumission === currentNumber);
+                        
+                        if (item && item.data) {
+                            APP.utils.showLoading(true);
+                            APP.restoreData(item.data);
+                            APP.utils.showLoading(false);
+                            console.log('Soumission ' + currentNumber + ' chargée');
+                            return;
+                        }
+                    }
+                    
+                    // Sinon, essayer l'ancienne méthode (compatibilité)
+                    const savedData = localStorage.getItem('soumission_data');
+                    
+                    if (!savedData) {
+                        APP.setDefaultValues();
+                        return;
+                    }
+                    
+                    APP.utils.showLoading(true);
+                    const data = JSON.parse(savedData);
+                    
+                    // Valider la version
+                    if (data.version !== '2.0' && !data.version) {
+                        console.warn('Version de données ancienne détectée');
+                    }
+                    
+                    // Restaurer les informations
+                    APP.restoreData(data);
+                    
+                    APP.utils.showLoading(false);
+                    console.log('Données chargées avec succès');
+                } catch (error) {
+                    console.error('Erreur lors du chargement:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors du chargement', true);
+                    APP.setDefaultValues();
+                    APP.utils.showLoading(false);
+                }
+            },
+
+            // Restaurer les données
+            restoreData(data) {
+                try {
+                    // Restaurer les taux
+                    if (data.rates) {
+                        APP.state.rates.admin = data.rates.admin || CONFIG.DEFAULT_RATES.ADMIN;
+                        APP.state.rates.contingency = data.rates.contingency || CONFIG.DEFAULT_RATES.CONTINGENCY;
+                        APP.state.rates.profit = data.rates.profit || CONFIG.DEFAULT_RATES.PROFIT;
+                        
+                        document.getElementById('adminRate').value = APP.state.rates.admin * 100;
+                        document.getElementById('contingencyRate').value = APP.state.rates.contingency * 100;
+                        document.getElementById('profitRate').value = APP.state.rates.profit * 100;
+                    }
+                    
+                    // Restaurer les informations d'en-tête
+                    if (data.headerInfo) {
+                        Object.keys(data.headerInfo).forEach(field => {
+                            const el = document.getElementById(field);
+                            if (el && data.headerInfo[field]) {
+                                el.value = data.headerInfo[field];
+                            }
+                        });
+                    }
+                    
+                    // Restaurer les informations du projet
+                    if (data.projectInfo) {
+                        Object.keys(data.projectInfo).forEach(field => {
+                            const el = document.getElementById(field);
+                            if (el && data.projectInfo[field]) {
+                                el.value = data.projectInfo[field];
+                            }
+                        });
+                    }
+                    
+                    // Restaurer les informations de l'entreprise
+                    if (data.companyInfo) {
+                        Object.keys(data.companyInfo).forEach(field => {
+                            const el = document.getElementById(field);
+                            if (el && data.companyInfo[field]) {
+                                el.value = data.companyInfo[field];
+                            }
+                        });
+                        
+                        // Mettre à jour l'affichage des taxes après restauration
+                        setTimeout(() => APP.updateTaxNumbers(), 100);
+                    }
+                    
+                    // Restaurer les valeurs des inputs de montant
+                    if (data.inputs) {
+                        Object.keys(data.inputs).forEach(key => {
+                            const input = document.querySelector(`.amount-input[data-row="${key}"]`);
+                            if (input) {
+                                input.value = data.inputs[key];
+                            }
+                        });
+                    }
+                    
+                    // Restaurer les valeurs des inputs de quantité
+                    if (data.quantities) {
+                        Object.keys(data.quantities).forEach(key => {
+                            const input = document.querySelector(`.quantity-input[data-row="${key}"]`);
+                            if (input) {
+                                input.value = data.quantities[key];
+                            }
+                        });
+                    }
+                    
+                    // Restaurer l'état du masquage des sections vides
+                    if (typeof data.hideEmptySections !== 'undefined') {
+                        APP.state.hideEmptySections = data.hideEmptySections;
+                        
+                        // Mettre à jour le bouton
+                        const button = document.querySelector('button[onclick="APP.toggleEmptySections()"]');
+                        if (button) {
+                            if (APP.state.hideEmptySections) {
+                                button.textContent = '👁️ Afficher sections vides';
+                                button.title = 'Afficher toutes les sections';
+                                button.classList.add('success');
+                            } else {
+                                button.textContent = '🔍 Masquer sections vides';
+                                button.title = 'Masquer automatiquement les sections sans prix';
+                                button.classList.remove('success');
+                            }
+                        }
+                    }
+                    
+                    // Recalculer tous les totaux après restauration
+                    document.querySelectorAll('.amount-input').forEach(input => {
+                        APP.calculateRowWithQuantity(input);
+                    });
+                    
+                    // Appliquer le masquage des sections vides si activé
+                    if (APP.state.hideEmptySections) {
+                        APP.updateEmptySectionsVisibility();
+                    }
+                    
+                    // Restaurer l'état des checkboxes
+                    if (data.checkboxes) {
+                        const checkboxes = document.querySelectorAll('.hide-checkbox');
+                        Object.keys(data.checkboxes).forEach(index => {
+                            if (checkboxes[index]) {
+                                checkboxes[index].checked = data.checkboxes[index];
+                                APP.toggleRow(checkboxes[index]);
+                            }
+                        });
+                    }
+                } catch (error) {
+                    console.error('Erreur lors de la restauration des données:', error);
+                    throw error;
+                }
+            },
+
+            // Définir les valeurs par défaut
+            setDefaultValues() {
+                try {
+                    // Date du jour
+                    const today = new Date();
+                    const dateStr = today.toISOString().split('T')[0];
+                    document.getElementById('dateSoumission').value = dateStr;
+                    
+                    // Numéro de soumission par défaut
+                    const defaultNumber = '2025-001';
+                    document.getElementById('numeroSoumission').value = defaultNumber;
+                    
+                    // Mettre à jour l'affichage des taxes
+                    APP.updateTaxNumbers();
+                } catch (error) {
+                    console.error('Erreur lors de la définition des valeurs par défaut:', error);
+                }
+            },
+
+            // Réinitialiser tout
+            resetAll() {
+                if (!confirm('Êtes-vous sûr de vouloir réinitialiser tous les montants et informations?\n\nCette action est irréversible!')) {
+                    return;
+                }
+                
+                try {
+                    APP.utils.showLoading(true);
+                    
+                    // Réinitialiser tous les inputs de montants
+                    document.querySelectorAll('.amount-input').forEach(input => {
+                        input.value = 0;
+                    });
+                    
+                    // Réinitialiser tous les inputs de quantités
+                    document.querySelectorAll('.quantity-input').forEach(input => {
+                        input.value = 1;
+                    });
+                    
+                    // Recalculer tous les totaux
+                    document.querySelectorAll('.amount-input').forEach(input => {
+                        APP.calculateRowWithQuantity(input);
+                    });
+                    
+                    // Réinitialiser toutes les checkboxes
+                    document.querySelectorAll('.hide-checkbox').forEach(checkbox => {
+                        checkbox.checked = true;
+                        APP.toggleRow(checkbox);
+                    });
+                    
+                    // Réinitialiser les taux
+                    APP.state.rates.admin = CONFIG.DEFAULT_RATES.ADMIN;
+                    APP.state.rates.contingency = CONFIG.DEFAULT_RATES.CONTINGENCY;
+                    APP.state.rates.profit = CONFIG.DEFAULT_RATES.PROFIT;
+                    
+                    document.getElementById('adminRate').value = APP.state.rates.admin * 100;
+                    document.getElementById('contingencyRate').value = APP.state.rates.contingency * 100;
+                    document.getElementById('profitRate').value = APP.state.rates.profit * 100;
+                    
+                    // Réinitialiser les champs de texte
+                    const textFields = [
+                        'nomClient', 'adresseClient', 'villeClient', 'codePostalClient',
+                        'nomProjet', 'typeConstruction', 'superficie', 'etages',
+                        'typeFondation', 'nomContact', 'chargeProjet', 'preparePar'
+                    ];
+                    
+                    // Conserver les informations de l'entreprise (ne pas réinitialiser)
+                    
+                    textFields.forEach(field => {
+                        const el = document.getElementById(field);
+                        if (el) el.value = '';
+                    });
+                    
+                    // Réinitialiser la date et le numéro
+                    APP.setDefaultValues();
+                    
+                    // Supprimer du localStorage
+                    if (APP.utils.isLocalStorageAvailable()) {
+                        localStorage.removeItem('soumission_data');
+                    }
+                    
+                    // Recalculer tout
+                    APP.calculateAll();
+                    
+                    APP.utils.showLoading(false);
+                    APP.utils.showNotification('✔ Réinitialisation complète');
+                } catch (error) {
+                    console.error('Erreur lors de la réinitialisation:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors de la réinitialisation', true);
+                    APP.utils.showLoading(false);
+                }
+            },
+
+            // Gestion de la signature client
+            currentDecision: null,
+            
+            showSignatureForm(decision) {
+                APP.currentDecision = decision;
+                const form = document.getElementById('signatureForm');
+                const confirmBtn = document.getElementById('confirmBtn');
+                
+                form.classList.add('show');
+                
+                // Changer le texte du bouton selon la décision
+                if (decision === 'accept') {
+                    confirmBtn.textContent = '✅ CONFIRMER L\'ACCEPTATION';
+                    confirmBtn.style.background = '#10b981';
+                } else {
+                    confirmBtn.textContent = '❌ CONFIRMER LE REFUS';
+                    confirmBtn.style.background = '#ef4444';
+                }
+                
+                // Scroll vers le formulaire
+                form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            },
+            
+            confirmDecision() {
+                const name = document.getElementById('clientName').value.trim();
+                const email = document.getElementById('clientEmail').value.trim();
+                const title = document.getElementById('clientTitle').value.trim();
+                const phone = document.getElementById('clientPhone').value.trim();
+                const comments = document.getElementById('clientComments').value.trim();
+                
+                // Validation
+                if (!name) {
+                    alert('Veuillez entrer votre nom complet');
+                    document.getElementById('clientName').focus();
+                    return;
+                }
+                
+                if (!email) {
+                    alert('Veuillez entrer votre adresse courriel');
+                    document.getElementById('clientEmail').focus();
+                    return;
+                }
+                
+                // Validation email basique
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    alert('Veuillez entrer une adresse courriel valide');
+                    document.getElementById('clientEmail').focus();
+                    return;
+                }
+                
+                // Confirmer la décision
+                const confirmMessage = APP.currentDecision === 'accept' 
+                    ? 'Confirmez-vous l\'ACCEPTATION de cette soumission?' 
+                    : 'Confirmez-vous le REFUS de cette soumission?';
+                    
+                if (!confirm(confirmMessage)) {
+                    return;
+                }
+                
+                // Afficher la confirmation
+                const confirmationDiv = document.getElementById('confirmationMessage');
+                const confirmationText = document.getElementById('confirmationText');
+                const timestamp = document.getElementById('signatureTimestamp');
+                const signatureSection = document.getElementById('signatureSection');
+                
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('fr-CA', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+                const timeStr = now.toLocaleTimeString('fr-CA', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                if (APP.currentDecision === 'accept') {
+                    confirmationDiv.classList.add('accepted');
+                    confirmationDiv.classList.remove('refused');
+                    confirmationText.innerHTML = `
+                        <strong>✅ SOUMISSION ACCEPTÉE</strong><br>
+                        <div style="margin-top: 10px; font-size: 11px; font-weight: normal;">
+                            Par : <strong>${name}</strong>${title ? ` (${title})` : ''}<br>
+                            Courriel : ${email}${phone ? `<br>Téléphone : ${phone}` : ''}
+                            ${comments ? `<br><br>Commentaires : <em>${comments}</em>` : ''}
+                        </div>
+                    `;
+                } else {
+                    confirmationDiv.classList.add('refused');
+                    confirmationDiv.classList.remove('accepted');
+                    confirmationText.innerHTML = `
+                        <strong>❌ SOUMISSION REFUSÉE</strong><br>
+                        <div style="margin-top: 10px; font-size: 11px; font-weight: normal;">
+                            Par : <strong>${name}</strong>${title ? ` (${title})` : ''}<br>
+                            Courriel : ${email}${phone ? `<br>Téléphone : ${phone}` : ''}
+                            ${comments ? `<br><br>Raison : <em>${comments}</em>` : ''}
+                        </div>
+                    `;
+                }
+                
+                timestamp.textContent = `Décision enregistrée le ${dateStr} à ${timeStr}`;
+                
+                // Afficher la confirmation et masquer le reste
+                confirmationDiv.style.display = 'block';
+                signatureSection.classList.add('signed');
+                
+                // Sauvegarder dans localStorage
+                const signatureData = {
+                    decision: APP.currentDecision,
+                    name: name,
+                    email: email,
+                    title: title,
+                    phone: phone,
+                    comments: comments,
+                    timestamp: now.toISOString(),
+                    soumissionNumber: document.getElementById('numeroSoumission').value
+                };
+                
+                localStorage.setItem('signatureDecision', JSON.stringify(signatureData));
+                
+                // Option pour imprimer
+                setTimeout(() => {
+                    if (confirm('Voulez-vous imprimer la soumission signée?')) {
+                        window.print();
+                    }
+                }, 500);
+            },
+            
+            // Vérifier si une décision existe déjà
+            checkExistingDecision() {
+                const savedDecision = localStorage.getItem('signatureDecision');
+                if (savedDecision) {
+                    const data = JSON.parse(savedDecision);
+                    const soumissionNumber = document.getElementById('numeroSoumission').value;
+                    
+                    // Vérifier si c'est pour la même soumission
+                    if (data.soumissionNumber === soumissionNumber) {
+                        // Restaurer l'état de décision
+                        APP.currentDecision = data.decision;
+                        
+                        const confirmationDiv = document.getElementById('confirmationMessage');
+                        const confirmationText = document.getElementById('confirmationText');
+                        const timestamp = document.getElementById('signatureTimestamp');
+                        const signatureSection = document.getElementById('signatureSection');
+                        
+                        const savedDate = new Date(data.timestamp);
+                        const dateStr = savedDate.toLocaleDateString('fr-CA', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        });
+                        const timeStr = savedDate.toLocaleTimeString('fr-CA', { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        });
+                        
+                        if (data.decision === 'accept') {
+                            confirmationDiv.classList.add('accepted');
+                            confirmationText.innerHTML = `
+                                <strong>✅ SOUMISSION ACCEPTÉE</strong><br>
+                                <div style="margin-top: 10px; font-size: 11px; font-weight: normal;">
+                                    Par : <strong>${data.name}</strong>${data.title ? ` (${data.title})` : ''}<br>
+                                    Courriel : ${data.email}${data.phone ? `<br>Téléphone : ${data.phone}` : ''}
+                                    ${data.comments ? `<br><br>Commentaires : <em>${data.comments}</em>` : ''}
+                                </div>
+                            `;
+                        } else {
+                            confirmationDiv.classList.add('refused');
+                            confirmationText.innerHTML = `
+                                <strong>❌ SOUMISSION REFUSÉE</strong><br>
+                                <div style="margin-top: 10px; font-size: 11px; font-weight: normal;">
+                                    Par : <strong>${data.name}</strong>${data.title ? ` (${data.title})` : ''}<br>
+                                    Courriel : ${data.email}${data.phone ? `<br>Téléphone : ${data.phone}` : ''}
+                                    ${data.comments ? `<br><br>Raison : <em>${data.comments}</em>` : ''}
+                                </div>
+                            `;
+                        }
+                        
+                        timestamp.textContent = `Décision enregistrée le ${dateStr} à ${timeStr}`;
+                        confirmationDiv.style.display = 'block';
+                        signatureSection.classList.add('signed');
+                    }
+                }
+            },
+            
+            // Réinitialiser la décision
+            resetDecision() {
+                if (confirm('Voulez-vous réinitialiser la décision et permettre une nouvelle signature?')) {
+                    localStorage.removeItem('signatureDecision');
+                    
+                    const confirmationDiv = document.getElementById('confirmationMessage');
+                    const signatureSection = document.getElementById('signatureSection');
+                    const form = document.getElementById('signatureForm');
+                    
+                    confirmationDiv.style.display = 'none';
+                    confirmationDiv.classList.remove('accepted', 'refused');
+                    signatureSection.classList.remove('signed');
+                    form.classList.remove('show');
+                    
+                    // Réinitialiser les champs
+                    document.getElementById('clientName').value = '';
+                    document.getElementById('clientEmail').value = '';
+                    document.getElementById('clientTitle').value = '';
+                    document.getElementById('clientPhone').value = '';
+                    document.getElementById('clientComments').value = '';
+                    
+                    APP.currentDecision = null;
+                    APP.utils.showNotification('✔ Signature réinitialisée');
+                }
+            },
+
+            // Exporter les données JSON
+            exportData() {
+                try {
+                    const data = APP.collectData();
+                    const dataStr = JSON.stringify(data, null, 2);
+                    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                    
+                    const date = new Date().toISOString().split('T')[0];
+                    const client = document.getElementById('nomClient').value || 'client';
+                    const exportFileName = `soumission_${client}_${date}.json`.replace(/\s+/g, '_');
+                    
+                    const linkElement = document.createElement('a');
+                    linkElement.setAttribute('href', dataUri);
+                    linkElement.setAttribute('download', exportFileName);
+                    linkElement.click();
+                    
+                    APP.utils.showNotification('✔ Données JSON exportées');
+                } catch (error) {
+                    console.error('Erreur lors de l\'export:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors de l\'export', true);
+                }
+            },
+
+            // Télécharger une copie HTML complète avec les données
+            downloadHTML() {
+                try {
+                    console.log('Début du téléchargement HTML...');
+                    APP.utils.showLoading(true);
+                    
+                    // Créer le nom du fichier d'abord
+                    const numeroSoumission = document.getElementById('numeroSoumission')?.value || '2025-001';
+                    const client = (document.getElementById('nomClient')?.value || 'client').replace(/[^a-zA-Z0-9]/g, '');
+                    const date = new Date().toISOString().split('T')[0];
+                    const fileName = `soumission_${numeroSoumission}_${client}_${date}.html`;
+                    
+                    console.log('Nom du fichier:', fileName);
+                    
+                    // Méthode ultra-simple : récupérer juste le HTML
+                    const htmlContent = `<!DOCTYPE html>
+<!-- Version exportée de la soumission - ${new Date().toLocaleString()} -->
+${document.documentElement.outerHTML}`;
+                    
+                    console.log('Contenu HTML préparé, taille:', htmlContent.length);
+                    
+                    // Créer le blob
+                    const blob = new Blob([htmlContent], { 
+                        type: 'text/html;charset=utf-8' 
+                    });
+                    
+                    console.log('Blob créé, taille:', blob.size);
+                    
+                    // Méthode alternative avec URL temporaire
+                    const url = URL.createObjectURL(blob);
+                    console.log('URL créée:', url);
+                    
+                    // Créer le lien de téléchargement
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = fileName;
+                    link.style.display = 'none';
+                    
+                    // Ajouter au DOM, cliquer, puis supprimer
+                    document.body.appendChild(link);
+                    console.log('Déclenchement du téléchargement...');
+                    link.click();
+                    
+                    // Nettoyer immédiatement
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                    
+                    APP.utils.showLoading(false);
+                    APP.utils.showNotification(`✔ Fichier téléchargé: ${fileName}`);
+                    console.log('Téléchargement terminé avec succès');
+                    
+                } catch (error) {
+                    console.error('Erreur détaillée lors du téléchargement:', error);
+                    APP.utils.showLoading(false);
+                    
+                    // Méthode de fallback avec window.open
+                    try {
+                        console.log('Tentative de méthode alternative...');
+                        const htmlContent = document.documentElement.outerHTML;
+                        const dataUrl = 'data:text/html;charset=utf-8,' + encodeURIComponent(htmlContent);
+                        const newWindow = window.open(dataUrl, '_blank');
+                        
+                        if (newWindow) {
+                            APP.utils.showNotification('✔ HTML ouvert dans une nouvelle fenêtre (Ctrl+S pour sauvegarder)');
+                        } else {
+                            APP.utils.showNotification('⚠️ Bloqué par le navigateur - Autorisez les pop-ups', true);
+                        }
+                    } catch (fallbackError) {
+                        console.error('Erreur méthode alternative:', fallbackError);
+                        APP.utils.showNotification('⚠️ Téléchargement impossible - Vérifiez les paramètres du navigateur', true);
+                    }
+                }
+            },
+
+            // Export HTML simplifié
+            exportHTML() {
+                try {
+                    console.log('🚀 Début export HTML...');
+                    
+                    // Créer le nom du fichier
+                    const numero = document.getElementById('numeroSoumission')?.value || '2025-001';
+                    const client = (document.getElementById('nomClient')?.value || 'client').replace(/[^a-zA-Z0-9]/g, '');
+                    const date = new Date().toISOString().split('T')[0];
+                    const fileName = `soumission_${numero}_${client}_${date}.html`;
+                    
+                    console.log('📝 Nom fichier:', fileName);
+                    
+                    // Récupérer tout le HTML
+                    const fullHTML = `<!DOCTYPE html>\n${document.documentElement.outerHTML}`;
+                    
+                    console.log('📦 HTML récupéré, taille:', fullHTML.length, 'caractères');
+                    
+                    // Créer le téléchargement
+                    const element = document.createElement('a');
+                    element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(fullHTML));
+                    element.setAttribute('download', fileName);
+                    element.style.display = 'none';
+                    
+                    document.body.appendChild(element);
+                    element.click();
+                    document.body.removeChild(element);
+                    
+                    console.log('✅ Export terminé avec succès');
+                    APP.utils.showNotification(`✔ Fichier exporté: ${fileName}`);
+                    
+                } catch (error) {
+                    console.error('❌ Erreur export HTML:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors de l\'export HTML', true);
+                }
+            },
+
+            // Importer les données
+            importData() {
+                try {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.json';
+                    
+                    input.onchange = e => {
+                        const file = e.target.files[0];
+                        if (!file) return;
+                        
+                        // Vérifier la taille du fichier
+                        if (file.size > CONFIG.LIMITS.MAX_FILE_SIZE) {
+                            APP.utils.showNotification('⚠️ Fichier trop volumineux (max 5MB)', true);
+                            return;
+                        }
+                        
+                        // Vérifier le type de fichier
+                        if (!file.name.endsWith('.json')) {
+                            APP.utils.showNotification('⚠️ Format de fichier invalide', true);
+                            return;
+                        }
+                        
+                        const reader = new FileReader();
+                        
+                        reader.onerror = () => {
+                            APP.utils.showNotification('⚠️ Erreur de lecture du fichier', true);
+                        };
+                        
+                        reader.onload = event => {
+                            try {
+                                APP.utils.showLoading(true);
+                                const data = JSON.parse(event.target.result);
+                                
+                                // Valider la structure
+                                if (!data.inputs || !data.checkboxes || !data.rates) {
+                                    throw new Error('Structure de données invalide');
+                                }
+                                
+                                // Restaurer les données
+                                APP.restoreData(data);
+                                
+                                // Sauvegarder dans localStorage
+                                if (APP.utils.isLocalStorageAvailable()) {
+                                    localStorage.setItem('soumission_data', JSON.stringify(data));
+                                }
+                                
+                                // Recalculer tout
+                                APP.calculateAll();
+                                
+                                APP.utils.showLoading(false);
+                                APP.utils.showNotification('✔ Données importées avec succès');
+                            } catch (error) {
+                                console.error('Erreur import:', error);
+                                APP.utils.showNotification('⚠️ Format de fichier invalide', true);
+                                APP.utils.showLoading(false);
+                            }
+                        };
+                        
+                        reader.readAsText(file);
+                    };
+                    
+                    input.click();
+                } catch (error) {
+                    console.error('Erreur lors de l\'import:', error);
+                    APP.utils.showNotification('⚠️ Erreur lors de l\'import', true);
+                }
+            }
+        };
+
+        // Initialisation au chargement du DOM
+        document.addEventListener('DOMContentLoaded', () => {
+            APP.init();
+            
+            // Vérifier si une décision de signature existe déjà
+            APP.checkExistingDecision();
+            
+            // Fermer le modal en cliquant en dehors
+            document.getElementById('savedListModal').addEventListener('click', (e) => {
+                if (e.target.id === 'savedListModal') {
+                    APP.closeSavedList();
+                }
+            });
+            
+            // Raccourci clavier Escape pour fermer le modal
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    const modal = document.getElementById('savedListModal');
+                    if (modal.classList.contains('show')) {
+                        APP.closeSavedList();
+                    }
+                }
+            });
+        });
+
+        // Exposition globale pour les événements onclick
+        window.APP = APP;
+    </script>
+
+
+</body></html>
